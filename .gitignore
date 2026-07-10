@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+frontend/vite.config.js
+frontend/vite.config.d.ts
+
+# Data & uploads (bind-mounted, created at runtime)
+/data/
+/uploads/
+/backups/
+backend/data/
+backend/uploads/
+backend/backups/
+backend/.devdata/
+backend/.devuploads/
+backend/.devbackups/
+
+# Env
+.env
+
+# OS
+.DS_Store

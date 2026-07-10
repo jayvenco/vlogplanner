@@ -1,0 +1,22 @@
+services:
+  backend:
+    build: ./backend
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-please-change-this-secret-in-your-env-file}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}
+      - YOUTUBE_CLIENT_ID=${YOUTUBE_CLIENT_ID:-}
+      - YOUTUBE_CLIENT_SECRET=${YOUTUBE_CLIENT_SECRET:-}
+      - YOUTUBE_REDIRECT_URI=${YOUTUBE_REDIRECT_URI:-}
+    volumes:
+      - ./data:/app/data
+      - ./uploads:/app/uploads
+      - ./backups:/app/backups
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
