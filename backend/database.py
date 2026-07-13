@@ -12,7 +12,7 @@ os.makedirs(THUMBNAILS_DIR, exist_ok=True)
 BACKUPS_DIR = os.environ.get("BACKUPS_DIR", os.path.join(os.path.dirname(__file__), "backups"))
 os.makedirs(BACKUPS_DIR, exist_ok=True)
 
-DB_PATH = os.path.join(DATA_DIR, "vlogbuddy.db")
+DB_PATH = os.path.join(DATA_DIR, "vlogplanner.db")
 DATABASE_URL = f"sqlite:///{DB_PATH}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})

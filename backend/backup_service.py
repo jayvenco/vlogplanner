@@ -7,7 +7,7 @@ from datetime import datetime
 
 from database import BACKUPS_DIR, DB_PATH, UPLOADS_DIR
 
-logger = logging.getLogger("vlogbuddy.backup")
+logger = logging.getLogger("vlogplanner.backup")
 
 RETENTION_COUNT = 12
 
@@ -25,14 +25,14 @@ def _snapshot_db(dest_path: str) -> None:
 
 def create_backup() -> str:
     timestamp = datetime.utcnow().strftime("%Y-%m")
-    zip_path = os.path.join(BACKUPS_DIR, f"vlogbuddy-backup-{timestamp}.zip")
+    zip_path = os.path.join(BACKUPS_DIR, f"vlogplanner-backup-{timestamp}.zip")
 
     with tempfile.TemporaryDirectory() as tmp_dir:
-        db_snapshot_path = os.path.join(tmp_dir, "vlogbuddy.db")
+        db_snapshot_path = os.path.join(tmp_dir, "vlogplanner.db")
         _snapshot_db(db_snapshot_path)
 
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-            zf.write(db_snapshot_path, arcname="vlogbuddy.db")
+            zf.write(db_snapshot_path, arcname="vlogplanner.db")
             for root, _dirs, files in os.walk(UPLOADS_DIR):
                 for filename in files:
                     full_path = os.path.join(root, filename)
@@ -46,7 +46,7 @@ def create_backup() -> str:
 
 def apply_retention(keep: int = RETENTION_COUNT) -> None:
     backups = sorted(
-        (f for f in os.listdir(BACKUPS_DIR) if f.startswith("vlogbuddy-backup-") and f.endswith(".zip")),
+        (f for f in os.listdir(BACKUPS_DIR) if f.startswith("vlogplanner-backup-") and f.endswith(".zip")),
     )
     extra = backups[:-keep] if keep > 0 else backups
     for filename in extra:

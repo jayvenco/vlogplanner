@@ -1,4 +1,4 @@
-const TOKEN_KEY = "vlogbuddy.token";
+const TOKEN_KEY = "vlogplanner.token";
 
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);

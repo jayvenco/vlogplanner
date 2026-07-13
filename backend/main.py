@@ -23,7 +23,7 @@ async def lifespan(_app: FastAPI):
     scheduler.shutdown()
 
 
-app = FastAPI(title="VlogBuddy Kids API", lifespan=lifespan)
+app = FastAPI(title="VlogPlanner API", lifespan=lifespan)
 
 # In dev the Vite proxy avoids CORS entirely; in prod nginx proxies /api and /uploads.
 # This is kept permissive as a fallback for direct-to-API access during development.

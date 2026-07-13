@@ -1,4 +1,4 @@
-# 🎥 VlogBuddy Kids
+# 🎥 VlogPlanner
 
 Een vrolijke, eenvoudige webapp die jonge content creators stap voor stap helpt bij het bedenken, voorbereiden, opnemen en publiceren van YouTube-video's en vlogs.
 
@@ -19,8 +19,8 @@ Een vrolijke, eenvoudige webapp die jonge content creators stap voor stap helpt 
 Vereisten: [Docker](https://www.docker.com/) en Docker Compose.
 
 ```bash
-git clone <repo-url>
-cd vlogbuddy-kids
+git clone https://github.com/jayvenco/vlogplanner.git
+cd vlogplanner
 docker compose up --build
 ```
 
@@ -121,7 +121,7 @@ YOUTUBE_REDIRECT_URI=http://localhost:5173/api/youtube/callback
 ## Mapstructuur
 
 ```
-vlogbuddy-kids/
+vlogplanner/
 ├── backend/       # FastAPI app, modellen, routers
 ├── frontend/      # React + Vite + TypeScript app
 ├── docker-compose.yml

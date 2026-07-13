@@ -28,7 +28,7 @@ export default function Login() {
   return (
     <div className="auth-page">
       <div className="auth-card card">
-        <h1>🎥 VlogBuddy Kids</h1>
+        <h1>🎥 VlogPlanner</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"

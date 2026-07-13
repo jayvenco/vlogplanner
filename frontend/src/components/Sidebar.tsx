@@ -21,7 +21,7 @@ export default function Sidebar() {
     <nav className="sidebar">
       <div className="sidebar-brand">
         <span className="sidebar-logo">🎥</span>
-        <span>VlogBuddy</span>
+        <span>VlogPlanner</span>
       </div>
       <div className="sidebar-links">
         {NAV_ITEMS.map((item) => (

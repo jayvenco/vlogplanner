@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const THEME_KEY = "vlogbuddy.theme";
+const THEME_KEY = "vlogplanner.theme";
 export type Theme = "light" | "dark" | "rainbow" | "cyberpunk" | "earth";
 
 export const THEME_OPTIONS: { value: Theme; label: string; icon: string }[] = [
