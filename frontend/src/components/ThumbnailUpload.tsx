@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { getToken } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 
 interface Props {
   projectId: number;
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function ThumbnailUpload({ projectId, thumbnailPath, onUploaded }: Props) {
+  const { t } = useLanguage();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function ThumbnailUpload({ projectId, thumbnailPath, onUploaded }
       )}
       <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleFileChange} />
       <button className="secondary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-        {uploading ? "Bezig met uploaden..." : "📷 Thumbnail kiezen"}
+        {uploading ? t.thumbnail.uploading : t.thumbnail.choose}
       </button>
       {error && <p className="error-text">{error}</p>}
     </div>

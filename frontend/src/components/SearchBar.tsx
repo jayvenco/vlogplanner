@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 import type { SearchResults } from "../types";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 
 export default function SearchBar() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResults | null>(null);
   const [open, setOpen] = useState(false);
@@ -31,7 +33,7 @@ export default function SearchBar() {
     <div className="search-bar">
       <input
         type="text"
-        placeholder="🔍 Zoek in projecten, ideeën, taken..."
+        placeholder={t.search.placeholder}
         value={query}
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setOpen(true)}
@@ -39,10 +41,10 @@ export default function SearchBar() {
       />
       {open && query.length >= 2 && (
         <div className="search-results card">
-          {!hasResults && <p>Niks gevonden.</p>}
+          {!hasResults && <p>{t.search.noResults}</p>}
           {results && results.projects.length > 0 && (
             <div>
-              <strong>Projecten</strong>
+              <strong>{t.search.projects}</strong>
               {results.projects.map((p) => (
                 <Link key={p.id} to={`/projecten/${p.id}`} className="search-result-item">
                   🎬 {p.title}
@@ -52,7 +54,7 @@ export default function SearchBar() {
           )}
           {results && results.ideas.length > 0 && (
             <div>
-              <strong>Ideeën</strong>
+              <strong>{t.search.ideas}</strong>
               {results.ideas.map((i) => (
                 <Link key={i.id} to="/ideeen" className="search-result-item">
                   💡 {i.title}
@@ -62,10 +64,10 @@ export default function SearchBar() {
           )}
           {results && results.tasks.length > 0 && (
             <div>
-              <strong>Taken</strong>
-              {results.tasks.map((t) => (
-                <Link key={t.id} to="/taken" className="search-result-item">
-                  📋 {t.title}
+              <strong>{t.search.tasks}</strong>
+              {results.tasks.map((taskItem) => (
+                <Link key={taskItem.id} to="/taken" className="search-result-item">
+                  📋 {taskItem.title}
                 </Link>
               ))}
             </div>

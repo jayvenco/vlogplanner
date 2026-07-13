@@ -10,14 +10,8 @@ import {
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
 import type { IdeaCardType, KanbanColumn } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 import KanbanCard from "./KanbanCard";
-
-const COLUMNS: { key: KanbanColumn; label: string }[] = [
-  { key: "ideeen", label: "💡 Ideeën" },
-  { key: "mee_bezig", label: "🚧 Mee bezig" },
-  { key: "later", label: "⏳ Later" },
-  { key: "klaar", label: "🎉 Klaar" },
-];
 
 interface Props {
   ideas: IdeaCardType[];
@@ -25,9 +19,24 @@ interface Props {
   onPersist: (idea: IdeaCardType) => void;
   onDelete: (idea: IdeaCardType) => void;
   onAddCard: (column: KanbanColumn, title: string) => void;
+  onCardClick: (idea: IdeaCardType) => void;
 }
 
-function Column({ column, label, ideas, onDelete }: { column: KanbanColumn; label: string; ideas: IdeaCardType[]; onDelete: (idea: IdeaCardType) => void }) {
+function Column({
+  column,
+  label,
+  ideas,
+  onDelete,
+  onCardClick,
+  emptyLabel,
+}: {
+  column: KanbanColumn;
+  label: string;
+  ideas: IdeaCardType[];
+  onDelete: (idea: IdeaCardType) => void;
+  onCardClick: (idea: IdeaCardType) => void;
+  emptyLabel: string;
+}) {
   const { setNodeRef } = useDroppable({ id: column });
   return (
     <div className="kanban-column" ref={setNodeRef}>
@@ -35,28 +44,30 @@ function Column({ column, label, ideas, onDelete }: { column: KanbanColumn; labe
       <SortableContext items={ideas.map((i) => i.id)} strategy={verticalListSortingStrategy}>
         <div className="kanban-column-cards">
           {ideas.map((idea) => (
-            <KanbanCard key={idea.id} idea={idea} onDelete={onDelete} />
+            <KanbanCard key={idea.id} idea={idea} onDelete={onDelete} onClick={onCardClick} />
           ))}
-          {ideas.length === 0 && <EmptyDrop column={column} />}
+          {ideas.length === 0 && <div className="kanban-empty">{emptyLabel}</div>}
         </div>
       </SortableContext>
     </div>
   );
 }
 
-function EmptyDrop({ column: _column }: { column: KanbanColumn }) {
-  return <div className="kanban-empty">Sleep hier een kaart</div>;
-}
-
-export default function KanbanBoard({ ideas, onReorder, onPersist, onDelete, onAddCard }: Props) {
+export default function KanbanBoard({ ideas, onReorder, onPersist, onDelete, onAddCard, onCardClick }: Props) {
+  const { t } = useLanguage();
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
   const [newCardTitle, setNewCardTitle] = useState<Record<string, string>>({});
 
+  const COLUMNS: { key: KanbanColumn; label: string }[] = [
+    { key: "backlog", label: t.ideas.columnBacklog },
+    { key: "bezig", label: t.ideas.columnBezig },
+    { key: "afgerond", label: t.ideas.columnAfgerond },
+  ];
+
   const grouped: Record<KanbanColumn, IdeaCardType[]> = {
-    ideeen: [],
-    mee_bezig: [],
-    later: [],
-    klaar: [],
+    backlog: [],
+    bezig: [],
+    afgerond: [],
   };
   for (const idea of ideas) {
     grouped[idea.column].push(idea);
@@ -108,11 +119,18 @@ export default function KanbanBoard({ ideas, onReorder, onPersist, onDelete, onA
       <div className="kanban-board">
         {COLUMNS.map(({ key, label }) => (
           <div key={key} className="kanban-column-wrapper">
-            <Column column={key} label={label} ideas={grouped[key]} onDelete={onDelete} />
+            <Column
+              column={key}
+              label={label}
+              ideas={grouped[key]}
+              onDelete={onDelete}
+              onCardClick={onCardClick}
+              emptyLabel={t.ideas.dropHere}
+            />
             <div className="kanban-add">
               <input
                 type="text"
-                placeholder="Nieuw idee..."
+                placeholder={t.ideas.newIdea}
                 value={newCardTitle[key] || ""}
                 onChange={(e) => setNewCardTitle((prev) => ({ ...prev, [key]: e.target.value }))}
                 onKeyDown={(e) => e.key === "Enter" && submitNewCard(key)}

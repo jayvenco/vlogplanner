@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import { ApiError } from "../api/client";
 
 export default function Register() {
   const { register } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -20,7 +22,7 @@ export default function Register() {
       await register(username, email, password);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Registreren is mislukt");
+      setError(err instanceof ApiError ? err.message : t.auth.registerFailed);
     } finally {
       setLoading(false);
     }
@@ -29,25 +31,25 @@ export default function Register() {
   return (
     <div className="auth-page">
       <div className="auth-card card">
-        <h1>🎥 Welkom!</h1>
+        <h1>{t.auth.registerTitle}</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Gebruikersnaam"
+            placeholder={t.auth.username}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             required
           />
           <input
             type="email"
-            placeholder="E-mailadres"
+            placeholder={t.auth.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
             type="password"
-            placeholder="Wachtwoord"
+            placeholder={t.auth.password}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             minLength={6}
@@ -55,11 +57,11 @@ export default function Register() {
           />
           {error && <p className="error-text">{error}</p>}
           <button type="submit" disabled={loading}>
-            {loading ? "Bezig..." : "Account aanmaken"}
+            {loading ? t.auth.creatingAccount : t.auth.createAccount}
           </button>
         </form>
         <p>
-          Heb je al een account? <Link to="/inloggen">Log hier in</Link>
+          {t.auth.haveAccount} <Link to="/inloggen">{t.auth.loginHere}</Link>
         </p>
       </div>
     </div>

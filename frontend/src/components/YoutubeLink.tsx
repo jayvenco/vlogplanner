@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { api, ApiError } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 import type { Project, YoutubeStats, YoutubeStatus, YoutubeVideo } from "../types";
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function YoutubeLink({ project, onLinked }: Props) {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<YoutubeStatus | null>(null);
   const [videos, setVideos] = useState<YoutubeVideo[]>([]);
   const [loadingVideos, setLoadingVideos] = useState(false);
@@ -64,9 +66,11 @@ export default function YoutubeLink({ project, onLinked }: Props) {
   if (!status.connected) {
     return (
       <div className="card youtube-link">
-        <h3>▶️ YouTube</h3>
+        <h3>{t.youtubeLink.title}</h3>
         <p>
-          Verbind eerst je YouTube-kanaal bij <Link to="/instellingen">Instellingen</Link> om deze video te koppelen.
+          {t.youtubeLink.connectFirstPrefix}
+          <Link to="/instellingen">{t.sidebar.settings}</Link>
+          {t.youtubeLink.connectFirstSuffix}
         </p>
       </div>
     );
@@ -74,26 +78,26 @@ export default function YoutubeLink({ project, onLinked }: Props) {
 
   return (
     <div className="card youtube-link">
-      <h3>▶️ YouTube</h3>
+      <h3>{t.youtubeLink.title}</h3>
       {project.youtube_video_id ? (
         <div className="youtube-linked">
           <p>
-            Gekoppeld aan: <strong>{project.youtube_video_title}</strong>
+            {t.youtubeLink.linkedTo} <strong>{project.youtube_video_title}</strong>
           </p>
           {stats && (
             <p>
-              👁️ {stats.view_count ?? "?"} keer bekeken · 👍 {stats.like_count ?? "?"} likes
+              👁️ {stats.view_count ?? "?"} {t.youtubeLink.viewsLikes} · 👍 {stats.like_count ?? "?"} likes
             </p>
           )}
           <button className="ghost" onClick={handleUnlink}>
-            Loskoppelen
+            {t.youtubeLink.unlink}
           </button>
         </div>
       ) : (
         <div>
-          <p>Kies de video die bij dit project hoort:</p>
+          <p>{t.youtubeLink.chooseVideo}</p>
           <button className="secondary" onClick={loadVideos} disabled={loadingVideos}>
-            {loadingVideos ? "Laden..." : "Toon mijn video's"}
+            {loadingVideos ? t.youtubeLink.loadingVideos : t.youtubeLink.showVideos}
           </button>
           {error && <p className="error-text">{error}</p>}
           {videos.length > 0 && (

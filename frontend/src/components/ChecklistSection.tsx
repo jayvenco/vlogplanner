@@ -1,11 +1,6 @@
 import { useState } from "react";
 import type { ChecklistItem, ChecklistSection as ChecklistSectionType } from "../types";
-
-const SECTION_TITLES: Record<ChecklistSectionType, string> = {
-  voorbereiding: "🧰 Voorbereiding",
-  tijdens_filmen: "🎬 Tijdens filmen",
-  na_filmen: "🪄 Na filmen",
-};
+import { useLanguage } from "../context/LanguageContext";
 
 const SECTION_ORDER: ChecklistSectionType[] = ["voorbereiding", "tijdens_filmen", "na_filmen"];
 
@@ -17,7 +12,14 @@ interface Props {
 }
 
 export default function ChecklistSection({ items, onToggle, onAdd, onDelete }: Props) {
+  const { t } = useLanguage();
   const [newTexts, setNewTexts] = useState<Record<string, string>>({});
+
+  const SECTION_TITLES: Record<ChecklistSectionType, string> = {
+    voorbereiding: t.checklist.sectionPrep,
+    tijdens_filmen: t.checklist.sectionFilming,
+    na_filmen: t.checklist.sectionAfter,
+  };
 
   function submitNewItem(section: ChecklistSectionType) {
     const text = (newTexts[section] || "").trim();
@@ -41,7 +43,7 @@ export default function ChecklistSection({ items, onToggle, onAdd, onDelete }: P
                     <span>{item.text}</span>
                   </label>
                   {item.is_custom && (
-                    <button className="ghost small" onClick={() => onDelete(item)} aria-label="Verwijderen">
+                    <button className="ghost small" onClick={() => onDelete(item)} aria-label={t.common.remove}>
                       ✕
                     </button>
                   )}
@@ -51,13 +53,13 @@ export default function ChecklistSection({ items, onToggle, onAdd, onDelete }: P
             <div className="checklist-add">
               <input
                 type="text"
-                placeholder="Extra item toevoegen..."
+                placeholder={t.checklist.addPlaceholder}
                 value={newTexts[section] || ""}
                 onChange={(e) => setNewTexts((prev) => ({ ...prev, [section]: e.target.value }))}
                 onKeyDown={(e) => e.key === "Enter" && submitNewItem(section)}
               />
               <button className="secondary" onClick={() => submitNewItem(section)}>
-                + Toevoegen
+                {t.checklist.add}
               </button>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api, getToken, ApiError } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 import type {
   ChecklistItem,
   ChecklistSection as ChecklistSectionType,
@@ -24,6 +25,7 @@ type Tab = "overzicht" | "checklist" | "storyboard" | "sjabloon" | "dagboek";
 export default function ProjectDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [project, setProject] = useState<ProjectDetailType | null>(null);
   const [tab, setTab] = useState<Tab>("overzicht");
   const [title, setTitle] = useState("");
@@ -74,7 +76,7 @@ export default function ProjectDetail() {
   }
 
   async function handleDelete() {
-    if (!confirm("Weet je zeker dat je dit project wilt verwijderen?")) return;
+    if (!confirm(t.projectDetail.deleteConfirm)) return;
     await api.delete(`/api/projects/${id}`);
     navigate("/projecten");
   }
@@ -121,7 +123,7 @@ export default function ProjectDetail() {
       const tip = await api.post<ProjectTip>(`/api/projects/${id}/tips`, { question });
       setTips((prev) => [tip, ...prev]);
     } catch (err) {
-      throw new Error(err instanceof ApiError ? err.message : "Kon geen tip ophalen.");
+      throw new Error(err instanceof ApiError ? err.message : t.projectTemplate.askAiError);
     }
   }
 
@@ -151,7 +153,7 @@ export default function ProjectDetail() {
     URL.revokeObjectURL(url);
   }
 
-  if (!project) return <p>Laden...</p>;
+  if (!project) return <p>{t.common.loading}</p>;
 
   return (
     <div>
@@ -159,22 +161,22 @@ export default function ProjectDetail() {
         <h1>{project.title}</h1>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button className="secondary" onClick={handleExportPdf}>
-            📄 Exporteer PDF
+            {t.projectDetail.exportPdf}
           </button>
           <button className="danger" onClick={handleDelete}>
-            🗑️ Verwijderen
+            {t.projectDetail.deleteProject}
           </button>
         </div>
       </div>
 
       <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
-        {(["overzicht", "checklist", "storyboard", "sjabloon", "dagboek"] as Tab[]).map((t) => (
-          <button key={t} className={tab === t ? "" : "ghost"} onClick={() => setTab(t)}>
-            {t === "overzicht" && "📋 Overzicht"}
-            {t === "checklist" && "✅ Checklist"}
-            {t === "storyboard" && "🎞️ Storyboard"}
-            {t === "sjabloon" && "🧭 Sjabloon"}
-            {t === "dagboek" && "📔 Dagboek"}
+        {(["overzicht", "checklist", "storyboard", "sjabloon", "dagboek"] as Tab[]).map((tabKey) => (
+          <button key={tabKey} className={tab === tabKey ? "" : "ghost"} onClick={() => setTab(tabKey)}>
+            {tabKey === "overzicht" && t.projectDetail.tabOverview}
+            {tabKey === "checklist" && t.projectDetail.tabChecklist}
+            {tabKey === "storyboard" && t.projectDetail.tabStoryboard}
+            {tabKey === "sjabloon" && t.projectDetail.tabTemplate}
+            {tabKey === "dagboek" && t.projectDetail.tabDiary}
           </button>
         ))}
       </div>
@@ -190,11 +192,11 @@ export default function ProjectDetail() {
           <textarea rows={3} value={description} onChange={(e) => handleDescriptionChange(e.target.value)} />
           <div>
             <label>
-              Status:{" "}
+              {t.projectDetail.status}:{" "}
               <select value={project.status} onChange={(e) => handleStatusChange(e.target.value)}>
                 {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
-                    {s}
+                    {t.statusBadge[s]}
                   </option>
                 ))}
               </select>
@@ -202,7 +204,7 @@ export default function ProjectDetail() {
             <StatusBadge status={project.status} />
           </div>
           <div>
-            <p>Checklist voortgang</p>
+            <p>{t.projectDetail.checklistProgress}</p>
             <ProgressBar percent={project.checklist_progress} />
           </div>
         </div>
@@ -230,25 +232,25 @@ export default function ProjectDetail() {
         (template ? (
           <TemplateEditor template={template} tips={tips} onFieldChange={handleTemplateFieldChange} onAskTip={handleAskTip} />
         ) : (
-          <p>Laden...</p>
+          <p>{t.common.loading}</p>
         ))}
 
       {tab === "dagboek" && (
         <div>
           <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.5rem" }}>
             <textarea
-              placeholder="Wat ging er goed?"
+              placeholder={t.diary.goodPlaceholder}
               rows={2}
               value={diaryGoed}
               onChange={(e) => setDiaryGoed(e.target.value)}
             />
             <textarea
-              placeholder="Wat kan er beter?"
+              placeholder={t.diary.betterPlaceholder}
               rows={2}
               value={diaryBeter}
               onChange={(e) => setDiaryBeter(e.target.value)}
             />
-            <button onClick={handleAddDiaryEntry}>+ Toevoegen aan dagboek</button>
+            <button onClick={handleAddDiaryEntry}>{t.diary.add}</button>
           </div>
           {diaryEntries.map((entry) => (
             <div key={entry.id} className="card" style={{ marginBottom: "1rem" }}>

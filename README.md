@@ -93,29 +93,44 @@ YOUTUBE_REDIRECT_URI=http://localhost:5173/api/youtube/callback
 
 7. (Her)start de app. Bij **Instellingen** verschijnt nu een werkende "Verbind met YouTube"-knop. Zonder deze variabelen blijft de rest van de app gewoon werken — alleen die knop geeft dan een nette foutmelding.
 
+### YouTube trends (optioneel, apart van hierboven)
+
+De **Trends & Aanbevelingen**-pagina gebruikt een heel andere, veel eenvoudigere credential dan de OAuth-koppeling hierboven: een kale **Data API v3-sleutel**, geen OAuth-consent nodig.
+
+1. In dezelfde Google Cloud Console: **APIs & Services → Credentials → Create Credentials → API key**.
+2. Zet die sleutel in `.env` als `YOUTUBE_API_KEY=...`.
+3. Zonder deze sleutel toont de Trends-tab gewoon een nette "niet geconfigureerd"-melding; de rest van de app blijft werken.
+
+Trend-data wordt maximaal elke 6 uur ververst (gecached in de database) om binnen de gratis API-quota te blijven — geen live call per paginabezoek.
+
 ## Functionaliteit
 
 - 🏠 **Dashboard** — overzicht van projecten, taken, ideeën, laatste project, motiverende quote en behaalde badges
 - 🎬 **Mijn Projecten** — video-projecten met titel, beschrijving, thumbnail en status (Idee → Script → Opnemen → Bewerken → Klaar → Gepubliceerd)
 - ✅ **Checklist** — automatische checklist per project (voorbereiding / tijdens filmen / na filmen), met eigen items toevoegen
 - 🎞️ **Storyboard** — eenvoudig scène-voor-scène storyboard per project (Intro, Scene 1-3, Einde)
-- 🧭 **Sjabloon** — leidraad per project (thema, bronnen, afbeeldingen-ideeën, inspiratie-URLs, opbouw intro/midden/einde) plus een veld om GPT om tips te vragen (vereist een OpenAI API-sleutel bij Instellingen)
+- 🧭 **Sjabloon** — leidraad per project (thema, bronnen, afbeeldingen-ideeën, inspiratie-URLs, opbouw intro/midden/einde) plus een veld om de AI-assistent om tips te vragen
 - 📝 **Video Planner** — uitleg over hoe je een leuke video opbouwt
 - 📖 **Tips** — tips over filmen, geluid, presenteren en bewerken
-- 💡 **Ideeën** — Kanban-bord (Ideeën / Mee bezig / Later / Klaar) met drag & drop
+- 💡 **Ideeën-backlog** — Kanban-bord (Backlog / Bezig / Afgerond) met drag & drop; elk idee heeft een korte beschrijving, thema/tag, doelgroep-leeftijd, geschatte productiedatum, notities en een gekoppelde content-template. Filter op thema en leeftijd.
+- 📚 **Templates** — bibliotheek met 5 herbruikbare vlog-formats (Dag-in-het-leven, Tutorial, Q&A, Review, Storytime), elk met script-structuur (hook/intro/body/cta/outro), aanbevolen videolengte, thumbnail-tips, titel-formules en een checklist per productiefase
+- 🔮 **Trends & Aanbevelingen** — trending YouTube-video's per categorie (gecached, max. elke 6u ververst) met zoekwoord-extractie en view-velocity; plus een aanbevelingsmodule die op basis van doelgroep-leeftijd + thema een content-suggestie, passende template en toon/lengte-advies geeft met onderbouwing. Dit is een eenvoudige regel-gebaseerde matching, geen AI/ML-model.
+- 📌 **Inspiratie** — losse inspiratie bewaren (links, screenshot-notities, quotes) met tags, los van de Ideeën-backlog
 - 📋 **Taken** — todo-lijst met deadline en prioriteit
 - 📔 **Dagboek** — bijhouden wat goed ging en wat beter kan, per project of algemeen
 - 🏅 **Badges** — beloningen voor mijlpalen zoals "Eerste project!" en "Checklist kampioen!"
 - 🎨 **5 thema's** — Licht, Donker, Rainbow, Cyberpunk, Earth colors — te kiezen bij Instellingen
+- 🌐 **Nederlands / English** — taalschakelaar bij Instellingen voor de hele interface (navigatie, knoppen, formulieren, statische uitlegpagina's). Inhoud die je zelf typt of die uit de database komt — projecttitels, checklist-items, ideeën, dagboek — verandert niet mee met de taalkeuze.
 - 🌗 Automatische voortgangsbalk per project, thumbnail-upload en autosave
 - 🔍 **Zoeken** — doorzoek projecten, ideeën en taken
 - 💾 **Automatische back-ups** — maandelijkse zip van database + uploads, laatste 12 bewaard
-- ▶️ **YouTube** — koppel je echte kanaal (OAuth) en link een gepubliceerd project aan de bijbehorende video, met live weergaven/likes op de projectpagina
+- ▶️ **YouTube-koppeling** — koppel je echte kanaal (OAuth) en link een gepubliceerd project aan de bijbehorende video, met live weergaven/likes op de projectpagina
+- 🤖 **AI-assistent** — provider-onafhankelijk: OpenAI, Anthropic (Claude) of een eigen OpenAI-compatibele custom endpoint. API-sleutel wordt versleuteld opgeslagen (Fernet-encryptie), nooit in platte tekst. Gebruikt voor projecttips én voor "Genereer met AI" op ideeën (script, titel-suggesties, thumbnail-tekst, beschrijving, hashtags), met een "Verifieer API key"-testknop bij Instellingen.
 
 ## Techniek
 
-- **Backend:** FastAPI, SQLAlchemy (SQLite), JWT-authenticatie, reportlab (PDF-export), OpenAI API (GPT-tips), APScheduler (maandelijkse back-ups)
-- **Frontend:** React + Vite + TypeScript, `@dnd-kit` voor drag & drop
+- **Backend:** FastAPI, SQLAlchemy (SQLite), JWT-authenticatie, reportlab (PDF-export), OpenAI/Anthropic SDK's + custom-endpoint support (AI-assistent), `cryptography` (Fernet-encryptie van API-sleutels), APScheduler (maandelijkse back-ups, trends-cache)
+- **Frontend:** React + Vite + TypeScript, `@dnd-kit` voor drag & drop, eigen lichtgewicht i18n-systeem (geen externe library) voor de NL/EN-taalschakelaar
 - **Infrastructuur:** Docker Compose, nginx als reverse proxy voor de frontend-container
 
 ## Mapstructuur

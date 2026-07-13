@@ -5,8 +5,14 @@ from database import get_db
 from models import ProjectTemplate, ProjectTip, User
 from schemas import ProjectTemplateOut, ProjectTemplateUpdate, ProjectTipOut, TipRequest
 from auth import get_current_user
-from gpt_service import ask_tip, NoApiKeyError, GptRequestError
+from llm_service import generate, NoApiKeyError, LLMRequestError
 from routers.projects import get_owned_project
+
+TIP_SYSTEM_PROMPT = (
+    "Je bent een vriendelijke, behulpzame assistent voor kinderen die YouTube-video's en vlogs maken. "
+    "Geef korte, concrete, positieve tips in het Nederlands, in eenvoudige taal die een kind van rond de "
+    "10-12 jaar goed begrijpt. Gebruik geen moeilijke woorden en houd het antwoord kort (max. 4-5 zinnen)."
+)
 
 router = APIRouter()
 
@@ -61,11 +67,12 @@ def create_tip(
     if not payload.question.strip():
         raise HTTPException(status_code=400, detail="Typ eerst een vraag voor GPT.")
 
+    context = f"Project thema: {project.title}. Beschrijving: {project.description or 'geen beschrijving'}."
     try:
-        answer = ask_tip(current_user.openai_api_key, project, payload.question)
+        answer = generate(current_user, TIP_SYSTEM_PROMPT, f"{context}\n\nVraag: {payload.question}")
     except NoApiKeyError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
-    except GptRequestError as exc:
+    except LLMRequestError as exc:
         raise HTTPException(status_code=502, detail=str(exc))
 
     tip = ProjectTip(project_id=project.id, question=payload.question, answer=answer)

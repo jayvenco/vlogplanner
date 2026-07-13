@@ -1,9 +1,18 @@
 from datetime import datetime, date
-from typing import Optional, List
+from typing import Optional, List, Dict, Any
 
 from pydantic import BaseModel, EmailStr, ConfigDict
 
-from models import ProjectStatus, ChecklistSection, StoryboardBlock, KanbanColumn, TaskPriority
+from models import (
+    ProjectStatus,
+    ChecklistSection,
+    StoryboardBlock,
+    KanbanColumn,
+    TaskPriority,
+    TargetAge,
+    LLMProvider,
+    InspirationType,
+)
 
 
 # --- Auth ---
@@ -24,17 +33,35 @@ class UserOut(BaseModel):
     username: str
     email: EmailStr
     created_at: datetime
-    has_openai_key: bool = False
+    has_llm_key: bool = False
+    llm_provider: Optional[LLMProvider] = None
+    llm_model: Optional[str] = None
+    llm_custom_endpoint: Optional[str] = None
 
     @classmethod
     def from_user(cls, user) -> "UserOut":
         out = cls.model_validate(user)
-        out.has_openai_key = bool(user.openai_api_key)
+        out.has_llm_key = bool(user.llm_api_key_encrypted)
         return out
 
 
 class UserSettingsUpdate(BaseModel):
-    openai_api_key: Optional[str] = None
+    llm_provider: Optional[LLMProvider] = None
+    llm_api_key: Optional[str] = None
+    llm_model: Optional[str] = None
+    llm_custom_endpoint: Optional[str] = None
+
+
+class LLMVerifyRequest(BaseModel):
+    llm_provider: LLMProvider
+    llm_api_key: str
+    llm_model: Optional[str] = None
+    llm_custom_endpoint: Optional[str] = None
+
+
+class LLMVerifyResult(BaseModel):
+    ok: bool
+    message: str
 
 
 class Token(BaseModel):
@@ -114,13 +141,23 @@ class ProjectDetailOut(ProjectOut):
 # --- Ideas (Kanban) ---
 class IdeaCardCreate(BaseModel):
     title: str
+    description: str = ""
     note: str = ""
-    column: KanbanColumn = KanbanColumn.ideeen
+    theme: Optional[str] = None
+    target_age: Optional[TargetAge] = None
+    estimated_date: Optional[date] = None
+    template_key: Optional[str] = None
+    column: KanbanColumn = KanbanColumn.backlog
 
 
 class IdeaCardUpdate(BaseModel):
     title: Optional[str] = None
+    description: Optional[str] = None
     note: Optional[str] = None
+    theme: Optional[str] = None
+    target_age: Optional[TargetAge] = None
+    estimated_date: Optional[date] = None
+    template_key: Optional[str] = None
     column: Optional[KanbanColumn] = None
     order: Optional[int] = None
 
@@ -129,9 +166,38 @@ class IdeaCardOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     id: int
     title: str
+    description: str
     note: str
+    theme: Optional[str] = None
+    target_age: Optional[TargetAge] = None
+    estimated_date: Optional[date] = None
+    template_key: Optional[str] = None
+    ai_generations: Optional[Dict[str, str]] = None
     column: KanbanColumn
     order: int
+
+    @classmethod
+    def from_idea(cls, idea) -> "IdeaCardOut":
+        import json
+
+        data = {
+            "id": idea.id,
+            "title": idea.title,
+            "description": idea.description or "",
+            "note": idea.note or "",
+            "theme": idea.theme,
+            "target_age": idea.target_age,
+            "estimated_date": idea.estimated_date,
+            "template_key": idea.template_key,
+            "ai_generations": json.loads(idea.ai_generations) if idea.ai_generations else {},
+            "column": idea.column,
+            "order": idea.order,
+        }
+        return cls(**data)
+
+
+class IdeaGenerateRequest(BaseModel):
+    kind: str
 
 
 # --- Tasks ---
@@ -237,6 +303,72 @@ class YoutubeLinkUpdate(BaseModel):
 class YoutubeStatsOut(BaseModel):
     view_count: Optional[int] = None
     like_count: Optional[int] = None
+
+
+# --- Inspiration ---
+class InspirationCreate(BaseModel):
+    type: InspirationType = InspirationType.link
+    content: str
+    tags: str = ""
+
+
+class InspirationUpdate(BaseModel):
+    type: Optional[InspirationType] = None
+    content: Optional[str] = None
+    tags: Optional[str] = None
+
+
+class InspirationOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    type: InspirationType
+    content: str
+    tags: str
+    created_at: datetime
+
+
+# --- Content templates (static library) ---
+class ContentTemplateOut(BaseModel):
+    key: str
+    name: str
+    icon: str
+    structure: Dict[str, str]
+    recommended_length: str
+    thumbnail_tips: str
+    title_formulas: List[str]
+    checklist: Dict[str, List[str]]
+
+
+# --- Trends ---
+class TrendVideoOut(BaseModel):
+    video_id: str
+    title: str
+    channel_title: str
+    thumbnail: Optional[str] = None
+    view_count: int
+    published_at: str
+    view_velocity: float
+
+
+class TrendsOut(BaseModel):
+    region_code: str
+    category_id: str
+    fetched_at: datetime
+    keywords: List[str]
+    videos: List[TrendVideoOut]
+
+
+# --- Recommendations ---
+class RecommendationRequest(BaseModel):
+    target_age: TargetAge
+    theme: str
+
+
+class RecommendationOut(BaseModel):
+    suggested_ideas: List[str]
+    suggested_template: Optional[ContentTemplateOut] = None
+    tone_and_length: str
+    reasoning: str
 
 
 # --- Badges ---

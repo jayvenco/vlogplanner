@@ -1,12 +1,5 @@
 import type { StoryboardScene, StoryboardBlock } from "../types";
-
-const BLOCK_LABELS: Record<StoryboardBlock, string> = {
-  intro: "🎬 Intro",
-  scene1: "1️⃣ Scene 1",
-  scene2: "2️⃣ Scene 2",
-  scene3: "3️⃣ Scene 3",
-  einde: "🏁 Einde",
-};
+import { useLanguage } from "../context/LanguageContext";
 
 interface Props {
   scenes: StoryboardScene[];
@@ -14,6 +7,16 @@ interface Props {
 }
 
 export default function StoryboardEditor({ scenes, onChange }: Props) {
+  const { t } = useLanguage();
+
+  const BLOCK_LABELS: Record<StoryboardBlock, string> = {
+    intro: t.storyboard.intro,
+    scene1: t.storyboard.scene1,
+    scene2: t.storyboard.scene2,
+    scene3: t.storyboard.scene3,
+    einde: t.storyboard.einde,
+  };
+
   return (
     <div className="storyboard">
       {scenes.map((scene) => (
@@ -21,12 +24,12 @@ export default function StoryboardEditor({ scenes, onChange }: Props) {
           <h3>{BLOCK_LABELS[scene.block]}</h3>
           <input
             type="text"
-            placeholder="Titel van deze scene"
+            placeholder={t.storyboard.titlePlaceholder}
             value={scene.title}
             onChange={(e) => onChange(scene.id, "title", e.target.value)}
           />
           <textarea
-            placeholder="Notities: wat gebeurt hier?"
+            placeholder={t.storyboard.notesPlaceholder}
             rows={3}
             value={scene.notes}
             onChange={(e) => onChange(scene.id, "notes", e.target.value)}

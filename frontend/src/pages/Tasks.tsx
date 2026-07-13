@@ -1,9 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 import type { TaskPriority, TaskType } from "../types";
 import TaskItem from "../components/TaskItem";
 
 export default function Tasks() {
+  const { t } = useLanguage();
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [title, setTitle] = useState("");
   const [deadline, setDeadline] = useState("");
@@ -38,13 +40,13 @@ export default function Tasks() {
   return (
     <div>
       <div className="page-header">
-        <h1>📋 Taken</h1>
+        <h1>{t.tasks.title}</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1.5rem", display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
         <input
           type="text"
-          placeholder="Nieuwe taak..."
+          placeholder={t.tasks.newPlaceholder}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           style={{ flex: 2, minWidth: "160px" }}
@@ -52,18 +54,18 @@ export default function Tasks() {
         />
         <input type="date" value={deadline} onChange={(e) => setDeadline(e.target.value)} />
         <select value={priority} onChange={(e) => setPriority(e.target.value as TaskPriority)}>
-          <option value="hoog">🔴 Hoog</option>
-          <option value="normaal">🟡 Normaal</option>
-          <option value="laag">🟢 Laag</option>
+          <option value="hoog">{t.tasks.priorityHigh}</option>
+          <option value="normaal">{t.tasks.priorityNormal}</option>
+          <option value="laag">{t.tasks.priorityLow}</option>
         </select>
-        <button type="submit">+ Toevoegen</button>
+        <button type="submit">{t.tasks.add}</button>
       </form>
 
       <div className="task-list">
         {tasks.map((task) => (
           <TaskItem key={task.id} task={task} onToggle={handleToggle} onDelete={handleDelete} />
         ))}
-        {tasks.length === 0 && <p>Nog geen taken. Goed bezig als je er een toevoegt!</p>}
+        {tasks.length === 0 && <p>{t.tasks.empty}</p>}
       </div>
     </div>
   );

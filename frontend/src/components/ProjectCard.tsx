@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 import type { Project } from "../types";
+import { useLanguage } from "../context/LanguageContext";
 import StatusBadge from "./StatusBadge";
 import ProgressBar from "./ProgressBar";
 
 export default function ProjectCard({ project }: { project: Project }) {
+  const { t } = useLanguage();
   return (
     <Link to={`/projecten/${project.id}`} className="project-card">
       <div className="project-card-thumb">
@@ -15,7 +17,7 @@ export default function ProjectCard({ project }: { project: Project }) {
       </div>
       <div className="project-card-body">
         <h3>{project.title}</h3>
-        <p>{project.description || "Geen beschrijving"}</p>
+        <p>{project.description || t.common.noDescription}</p>
         <StatusBadge status={project.status} />
         <ProgressBar percent={project.checklist_progress} />
       </div>

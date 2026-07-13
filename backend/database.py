@@ -29,14 +29,23 @@ def get_db():
 
 
 SCHEMA_UPGRADE_STATEMENTS = [
-    "ALTER TABLE users ADD COLUMN openai_api_key VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_access_token VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_refresh_token VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_token_expires_at DATETIME",
     "ALTER TABLE users ADD COLUMN youtube_channel_id VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_channel_title VARCHAR",
+    "ALTER TABLE users ADD COLUMN llm_provider VARCHAR",
+    "ALTER TABLE users ADD COLUMN llm_api_key_encrypted VARCHAR",
+    "ALTER TABLE users ADD COLUMN llm_model VARCHAR",
+    "ALTER TABLE users ADD COLUMN llm_custom_endpoint VARCHAR",
     "ALTER TABLE projects ADD COLUMN youtube_video_id VARCHAR",
     "ALTER TABLE projects ADD COLUMN youtube_video_title VARCHAR",
+    "ALTER TABLE idea_cards ADD COLUMN description TEXT",
+    "ALTER TABLE idea_cards ADD COLUMN theme VARCHAR",
+    "ALTER TABLE idea_cards ADD COLUMN target_age VARCHAR",
+    "ALTER TABLE idea_cards ADD COLUMN estimated_date DATE",
+    "ALTER TABLE idea_cards ADD COLUMN template_key VARCHAR",
+    "ALTER TABLE idea_cards ADD COLUMN ai_generations TEXT",
 ]
 
 

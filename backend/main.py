@@ -7,7 +7,23 @@ from fastapi.staticfiles import StaticFiles
 
 from database import Base, engine, run_schema_upgrades, UPLOADS_DIR
 from backup_service import configure_backup_job
-from routers import auth, projects, checklist, storyboard, ideas, tasks, diary, dashboard, search, template, youtube
+from routers import (
+    auth,
+    projects,
+    checklist,
+    storyboard,
+    ideas,
+    tasks,
+    diary,
+    dashboard,
+    search,
+    template,
+    youtube,
+    content_templates,
+    inspirations,
+    trends,
+    recommendations,
+)
 
 Base.metadata.create_all(bind=engine)
 run_schema_upgrades()
@@ -48,6 +64,10 @@ app.include_router(diary.router, prefix="/api/diary", tags=["diary"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["dashboard"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(youtube.router, prefix="/api/youtube", tags=["youtube"])
+app.include_router(content_templates.router, prefix="/api/templates", tags=["templates"])
+app.include_router(inspirations.router, prefix="/api/inspirations", tags=["inspirations"])
+app.include_router(trends.router, prefix="/api/trends", tags=["trends"])
+app.include_router(recommendations.router, prefix="/api/recommendations", tags=["recommendations"])
 
 
 @app.get("/api/health")

@@ -42,16 +42,34 @@ class StoryboardBlock(str, enum.Enum):
 
 
 class KanbanColumn(str, enum.Enum):
-    ideeen = "ideeen"
-    mee_bezig = "mee_bezig"
-    later = "later"
-    klaar = "klaar"
+    backlog = "backlog"
+    bezig = "bezig"
+    afgerond = "afgerond"
+
+
+class TargetAge(str, enum.Enum):
+    age_13_17 = "13-17"
+    age_18_24 = "18-24"
+    age_25_34 = "25-34"
+    age_35_plus = "35+"
 
 
 class TaskPriority(str, enum.Enum):
     hoog = "hoog"
     normaal = "normaal"
     laag = "laag"
+
+
+class LLMProvider(str, enum.Enum):
+    openai = "openai"
+    anthropic = "anthropic"
+    custom = "custom"
+
+
+class InspirationType(str, enum.Enum):
+    link = "link"
+    screenshot_note = "screenshot_note"
+    quote = "quote"
 
 
 class User(Base):
@@ -61,7 +79,10 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    openai_api_key = Column(String, nullable=True)
+    llm_provider = Column(Enum(LLMProvider), nullable=True)
+    llm_api_key_encrypted = Column(String, nullable=True)
+    llm_model = Column(String, nullable=True)
+    llm_custom_endpoint = Column(String, nullable=True)
     youtube_access_token = Column(String, nullable=True)
     youtube_refresh_token = Column(String, nullable=True)
     youtube_token_expires_at = Column(DateTime, nullable=True)
@@ -74,6 +95,7 @@ class User(Base):
     tasks = relationship("Task", back_populates="owner", cascade="all, delete-orphan")
     diary_entries = relationship("DiaryEntry", back_populates="owner", cascade="all, delete-orphan")
     badges = relationship("UserBadge", back_populates="owner", cascade="all, delete-orphan")
+    inspirations = relationship("Inspiration", back_populates="owner", cascade="all, delete-orphan")
 
 
 class Project(Base):
@@ -139,12 +161,42 @@ class IdeaCard(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     title = Column(String, nullable=False)
+    description = Column(Text, default="")
     note = Column(Text, default="")
-    column = Column(Enum(KanbanColumn), default=KanbanColumn.ideeen, nullable=False)
+    theme = Column(String, nullable=True)
+    target_age = Column(Enum(TargetAge), nullable=True)
+    estimated_date = Column(Date, nullable=True)
+    template_key = Column(String, nullable=True)
+    ai_generations = Column(Text, nullable=True)
+    column = Column(Enum(KanbanColumn), default=KanbanColumn.backlog, nullable=False)
     order = Column(Integer, default=0)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="ideas")
+
+
+class Inspiration(Base):
+    __tablename__ = "inspirations"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    type = Column(Enum(InspirationType), default=InspirationType.link, nullable=False)
+    content = Column(Text, nullable=False)
+    tags = Column(String, default="")
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    owner = relationship("User", back_populates="inspirations")
+
+
+class TrendsCache(Base):
+    __tablename__ = "trends_cache"
+    __table_args__ = (UniqueConstraint("region_code", "category_id", name="uq_trends_region_category"),)
+
+    id = Column(Integer, primary_key=True, index=True)
+    region_code = Column(String, nullable=False)
+    category_id = Column(String, nullable=False)
+    fetched_at = Column(DateTime, default=datetime.utcnow)
+    data = Column(Text, nullable=False)
 
 
 class Task(Base):

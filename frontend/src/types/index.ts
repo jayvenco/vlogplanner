@@ -1,15 +1,21 @@
 export type ProjectStatus = "idee" | "script" | "opnemen" | "bewerken" | "klaar" | "gepubliceerd";
 export type ChecklistSection = "voorbereiding" | "tijdens_filmen" | "na_filmen";
 export type StoryboardBlock = "intro" | "scene1" | "scene2" | "scene3" | "einde";
-export type KanbanColumn = "ideeen" | "mee_bezig" | "later" | "klaar";
+export type KanbanColumn = "backlog" | "bezig" | "afgerond";
 export type TaskPriority = "hoog" | "normaal" | "laag";
+export type TargetAge = "13-17" | "18-24" | "25-34" | "35+";
+export type LLMProvider = "openai" | "anthropic" | "custom";
+export type InspirationType = "link" | "screenshot_note" | "quote";
 
 export interface User {
   id: number;
   username: string;
   email: string;
   created_at: string;
-  has_openai_key: boolean;
+  has_llm_key: boolean;
+  llm_provider: LLMProvider | null;
+  llm_model: string | null;
+  llm_custom_endpoint: string | null;
 }
 
 export interface ChecklistItem {
@@ -50,7 +56,13 @@ export interface ProjectDetail extends Project {
 export interface IdeaCardType {
   id: number;
   title: string;
+  description: string;
   note: string;
+  theme: string | null;
+  target_age: TargetAge | null;
+  estimated_date: string | null;
+  template_key: string | null;
+  ai_generations: Record<string, string>;
   column: KanbanColumn;
   order: number;
 }
@@ -129,4 +141,58 @@ export interface YoutubeVideo {
 export interface YoutubeStats {
   view_count: number | null;
   like_count: number | null;
+}
+
+export interface ContentTemplate {
+  key: string;
+  name: string;
+  icon: string;
+  structure: { hook: string; intro: string; body: string; cta: string; outro: string };
+  recommended_length: string;
+  thumbnail_tips: string;
+  title_formulas: string[];
+  checklist: {
+    pre_productie: string[];
+    opname: string[];
+    montage: string[];
+    publicatie: string[];
+  };
+}
+
+export interface TrendCategory {
+  id: string;
+  label: string;
+}
+
+export interface TrendVideo {
+  video_id: string;
+  title: string;
+  channel_title: string;
+  thumbnail: string | null;
+  view_count: number;
+  published_at: string;
+  view_velocity: number;
+}
+
+export interface TrendsData {
+  region_code: string;
+  category_id: string;
+  fetched_at: string;
+  keywords: string[];
+  videos: TrendVideo[];
+}
+
+export interface RecommendationResult {
+  suggested_ideas: string[];
+  suggested_template: ContentTemplate | null;
+  tone_and_length: string;
+  reasoning: string;
+}
+
+export interface Inspiration {
+  id: number;
+  type: InspirationType;
+  content: string;
+  tags: string;
+  created_at: string;
 }

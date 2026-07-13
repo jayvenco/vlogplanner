@@ -1,21 +1,26 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useLanguage } from "../context/LanguageContext";
 import "./Sidebar.css";
-
-const NAV_ITEMS = [
-  { to: "/", label: "Dashboard", icon: "🏠", end: true },
-  { to: "/projecten", label: "Mijn Projecten", icon: "🎬" },
-  { to: "/checklist", label: "Checklist", icon: "✅" },
-  { to: "/video-planner", label: "Video Planner", icon: "📝" },
-  { to: "/ideeen", label: "Ideeën", icon: "💡" },
-  { to: "/taken", label: "Taken", icon: "📋" },
-  { to: "/tips", label: "Tips", icon: "📖" },
-  { to: "/dagboek", label: "Dagboek", icon: "📔" },
-  { to: "/instellingen", label: "Instellingen", icon: "⚙️" },
-];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
+
+  const NAV_ITEMS = [
+    { to: "/", label: t.sidebar.dashboard, icon: "🏠", end: true },
+    { to: "/projecten", label: t.sidebar.projects, icon: "🎬" },
+    { to: "/checklist", label: t.sidebar.checklist, icon: "✅" },
+    { to: "/video-planner", label: t.sidebar.videoPlanner, icon: "📝" },
+    { to: "/ideeen", label: t.sidebar.ideas, icon: "💡" },
+    { to: "/templates", label: t.sidebar.templates, icon: "📚" },
+    { to: "/trends", label: t.sidebar.trends, icon: "🔮" },
+    { to: "/inspiratie", label: t.sidebar.inspiration, icon: "📌" },
+    { to: "/taken", label: t.sidebar.tasks, icon: "📋" },
+    { to: "/tips", label: t.sidebar.tips, icon: "📖" },
+    { to: "/dagboek", label: t.sidebar.diary, icon: "📔" },
+    { to: "/instellingen", label: t.sidebar.settings, icon: "⚙️" },
+  ];
 
   return (
     <nav className="sidebar">
@@ -39,7 +44,7 @@ export default function Sidebar() {
       <div className="sidebar-footer">
         {user && <div className="sidebar-user">👋 {user.username}</div>}
         <button className="ghost" onClick={logout}>
-          Uitloggen
+          {t.sidebar.logout}
         </button>
       </div>
     </nav>

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { api } from "../api/client";
+import { useLanguage } from "../context/LanguageContext";
 import type { ChecklistItem, ChecklistSection as ChecklistSectionType, Project, ProjectDetail } from "../types";
 import ChecklistSection from "../components/ChecklistSection";
 import ProgressBar from "../components/ProgressBar";
 
 export default function ChecklistPage() {
+  const { t } = useLanguage();
   const [projects, setProjects] = useState<Project[]>([]);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [detail, setDetail] = useState<ProjectDetail | null>(null);
@@ -46,16 +48,16 @@ export default function ChecklistPage() {
   return (
     <div>
       <div className="page-header">
-        <h1>✅ Checklist</h1>
+        <h1>{t.checklist.pageTitle}</h1>
       </div>
 
       {projects.length === 0 ? (
-        <p>Maak eerst een project aan om een checklist te zien.</p>
+        <p>{t.checklist.emptyNoProjects}</p>
       ) : (
         <>
           <div className="card" style={{ marginBottom: "1.5rem" }}>
             <label>
-              Kies een project:{" "}
+              {t.checklist.chooseProject}{" "}
               <select value={selectedId ?? ""} onChange={(e) => setSelectedId(Number(e.target.value))}>
                 {projects.map((p) => (
                   <option key={p.id} value={p.id}>

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import Project, IdeaCard, Task, User
-from schemas import SearchResults
+from schemas import SearchResults, IdeaCardOut
 from auth import get_current_user
 from routers.projects import project_to_out
 
@@ -36,6 +36,6 @@ def search(q: str, db: Session = Depends(get_db), current_user: User = Depends(g
 
     return SearchResults(
         projects=[project_to_out(p) for p in projects],
-        ideas=ideas,
+        ideas=[IdeaCardOut.from_idea(i) for i in ideas],
         tasks=tasks,
     )

@@ -1,38 +1,13 @@
-const CATEGORIES = [
-  {
-    title: "Filmen",
-    icon: "🎥",
-    tips: [
-      "Houd de camera stil.",
-      "Film met voldoende licht.",
-      "Gebruik natuurlijk licht.",
-      "Maak meerdere opnames.",
-    ],
-  },
-  {
-    title: "Geluid",
-    icon: "🎙️",
-    tips: ["Film op een rustige plek.", "Praat duidelijk.", "Controleer achtergrondgeluid."],
-  },
-  {
-    title: "Presenteren",
-    icon: "😄",
-    tips: ["Lach.", "Kijk in de camera.", "Praat rustig.", "Wees jezelf."],
-  },
-  {
-    title: "Bewerken",
-    icon: "✂️",
-    tips: ["Houd video's kort.", "Gebruik niet te veel effecten.", "Voeg muziek toe.", "Gebruik duidelijke overgangen."],
-  },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Tips() {
+  const { t } = useLanguage();
   return (
     <div>
       <div className="page-header">
-        <h1>📖 Tips</h1>
+        <h1>{t.tips.title}</h1>
       </div>
-      {CATEGORIES.map((cat) => (
+      {t.tips.categories.map((cat) => (
         <div key={cat.title} className="card tip-category">
           <h2>
             {cat.icon} {cat.title}
