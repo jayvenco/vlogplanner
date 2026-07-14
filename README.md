@@ -38,6 +38,33 @@ cp .env.example .env
 
 Zonder `.env`-bestand werkt de app ook prima met veilige standaardwaarden voor lokaal gebruik.
 
+### Updaten
+
+```bash
+cd vlogplanner
+git pull
+docker compose up -d --build
+```
+
+### Installeren op Unraid
+
+Snelste route: via de Unraid-terminal, zonder extra plugins nodig (Unraid 6.12+ heeft `docker compose` al ingebouwd).
+
+```bash
+cd /mnt/user/appdata
+git clone https://github.com/jayvenco/vlogplanner.git
+cd vlogplanner
+docker compose up -d --build
+```
+
+Open daarna `http://<jouw-unraid-ip>:3000`. Data (database, uploads, back-ups) blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map.
+
+Updaten op Unraid gaat hetzelfde als hierboven: `cd /mnt/user/appdata/vlogplanner && git pull && docker compose up -d --build`.
+
+Poort 3000 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie" hierboven) vóórdat je `docker compose up` draait.
+
+Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
+
 ## Ontwikkelmodus (zonder Docker)
 
 **Backend** (vereist Python 3.12; werkt ook op 3.9+):
