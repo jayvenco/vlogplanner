@@ -21,10 +21,13 @@ Vereisten: [Docker](https://www.docker.com/) en Docker Compose.
 ```bash
 git clone https://github.com/jayvenco/vlogplanner.git
 cd vlogplanner
-docker compose up --build
+DOCKER_BUILDKIT=0 docker compose build
+docker compose up -d
 ```
 
 Open daarna **http://localhost:3000** in de browser. Klaar!
+
+> **Waarom `DOCKER_BUILDKIT=0`?** Op sommige systemen (o.a. veel Unraid-installaties) is de meegeleverde `buildx`-plugin ouder dan de versie die Docker Compose's nieuwe "Bake" build-pad vereist, wat een `compose build requires buildx 0.17.0 or later`-foutmelding geeft. `DOCKER_BUILDKIT=0` schakelt dat pad uit en gebruikt de klassieke builder, die met elke Docker-versie werkt. Zie je deze foutmelding niet? Dan mag je ook gewoon `docker compose up --build` gebruiken.
 
 De database (SQLite) en geüploade thumbnails worden automatisch aangemaakt in `./data` en `./uploads` bij de eerste start — geen handmatige configuratie nodig.
 
@@ -43,7 +46,8 @@ Zonder `.env`-bestand werkt de app ook prima met veilige standaardwaarden voor l
 ```bash
 cd vlogplanner
 git pull
-docker compose up -d --build
+DOCKER_BUILDKIT=0 docker compose build
+docker compose up -d
 ```
 
 ### Installeren op Unraid
@@ -54,16 +58,30 @@ Snelste route: via de Unraid-terminal, zonder extra plugins nodig (Unraid 6.12+ 
 cd /mnt/user/appdata
 git clone https://github.com/jayvenco/vlogplanner.git
 cd vlogplanner
-docker compose up -d --build
+DOCKER_BUILDKIT=0 docker compose build
+docker compose up -d
 ```
 
 Open daarna `http://<jouw-unraid-ip>:3000`. Data (database, uploads, back-ups) blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map.
 
-Updaten op Unraid gaat hetzelfde als hierboven: `cd /mnt/user/appdata/vlogplanner && git pull && docker compose up -d --build`.
+Updaten op Unraid gaat hetzelfde als hierboven: `cd /mnt/user/appdata/vlogplanner && git pull && DOCKER_BUILDKIT=0 docker compose build && docker compose up -d`.
 
 Poort 3000 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie" hierboven) vóórdat je `docker compose up` draait.
 
 Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
+
+**Foutmelding `compose build requires buildx 0.17.0 or later`?** Dit is een bekend probleem op (vooral oudere) Unraid-installaties met een verouderde `buildx`-plugin — geen probleem met de app zelf. Los op met:
+
+```bash
+DOCKER_BUILDKIT=0 docker compose build
+docker compose up -d
+```
+
+Wil je niet elke keer die prefix typen? Zet 'm permanent in je `.env`-bestand (`cp .env.example .env` als je dat nog niet had):
+
+```
+DOCKER_BUILDKIT=0
+```
 
 ## Ontwikkelmodus (zonder Docker)
 
@@ -88,7 +106,7 @@ Open **http://localhost:5173**. Vite proxyt `/api` en `/uploads` automatisch naa
 
 ## Productie
 
-`docker compose up --build -d` bouwt en start beide containers op de achtergrond:
+`DOCKER_BUILDKIT=0 docker compose build && docker compose up -d` bouwt en start beide containers op de achtergrond (zie de opmerking over `DOCKER_BUILDKIT` hierboven als je die foutmelding niet krijgt — dan volstaat ook gewoon `docker compose up --build -d`):
 
 - `frontend` — nginx serveert de gebouwde React-app op poort 3000 (te wijzigen via `FRONTEND_PORT`) en proxyt `/api` en `/uploads` naar de backend.
 - `backend` — FastAPI op poort 8000 (alleen bereikbaar binnen het Docker-netwerk).
