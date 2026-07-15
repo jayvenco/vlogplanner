@@ -25,7 +25,7 @@ export default function Sidebar() {
   return (
     <nav className="sidebar">
       <div className="sidebar-brand">
-        <span className="sidebar-mark" />
+        <img src="/logo-icon.png" alt="" className="sidebar-mark" />
         <span>VlogPlanner</span>
       </div>
       <div className="sidebar-links">

@@ -21,10 +21,9 @@
 }
 
 .sidebar-mark {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
-  background: var(--color-primary);
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 

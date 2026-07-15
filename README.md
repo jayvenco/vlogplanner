@@ -1,4 +1,8 @@
-# 🎥 VlogPlanner
+<p align="center">
+  <img src="frontend/public/logo-icon.png" alt="VlogPlanner logo" width="120" />
+</p>
+
+# VlogPlanner
 
 Een vrolijke, eenvoudige webapp die jonge content creators stap voor stap helpt bij het bedenken, voorbereiden, opnemen en publiceren van YouTube-video's en vlogs.
 
