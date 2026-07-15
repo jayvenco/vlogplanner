@@ -324,6 +324,7 @@ class InspirationOut(BaseModel):
     type: InspirationType
     content: str
     tags: str
+    image_path: Optional[str] = None
     created_at: datetime
 
 

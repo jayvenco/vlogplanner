@@ -610,6 +610,21 @@ button.small {
   color: #3a2e22;
 }
 
+.theme-swatch[data-theme-preview="kpop"] {
+  background: linear-gradient(135deg, #ffd6f5 0%, #e0c3fc 50%, #c9b6ff 100%);
+  color: #2d1b4e;
+}
+
+.theme-swatch[data-theme-preview="anime"] {
+  background: linear-gradient(160deg, #fff8ec 0%, #ffe3c2 100%);
+  color: #1a1a1a;
+}
+
+.theme-swatch[data-theme-preview="youtube"] {
+  background: linear-gradient(160deg, #ffffff 0%, #f2f2f2 100%);
+  color: #ff0000;
+}
+
 /* Project template */
 .template-editor {
   display: grid;

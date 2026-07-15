@@ -108,6 +108,70 @@
   --on-primary: #fffaf2;
 }
 
+[data-theme="kpop"] {
+  --color-bg: #fdf4ff;
+  --color-bg-gradient: linear-gradient(135deg, #ffd6f5 0%, #e0c3fc 50%, #c9b6ff 100%);
+  --color-surface: #ffffff;
+  --color-surface-2: #fdf0ff;
+  --color-primary: #ff4fd8;
+  --color-primary-dark: #e02fb8;
+  --color-primary-soft: rgba(255, 79, 216, 0.14);
+  --color-secondary: #6c2bd9;
+  --color-accent: #a855f7;
+  --color-pink: #ff8fe0;
+  --color-orange: #ffb86c;
+  --color-text: #2d1b4e;
+  --color-text-muted: #8b7aa8;
+  --color-border: #f3d9ff;
+  --color-danger: #ff4d6d;
+  --color-success: #2dd4bf;
+  --shadow: 0 1px 2px rgba(168, 85, 247, 0.08), 0 10px 30px rgba(255, 79, 216, 0.18);
+  --on-primary: #ffffff;
+}
+
+[data-theme="anime"] {
+  --color-bg: #fff8ec;
+  --color-bg-gradient: none;
+  --color-surface: #fffdf7;
+  --color-surface-2: #fff1de;
+  --color-primary: #ff3b30;
+  --color-primary-dark: #d92c22;
+  --color-primary-soft: rgba(255, 59, 48, 0.12);
+  --color-secondary: #1a1a1a;
+  --color-accent: #ff6fa5;
+  --color-pink: #ff6fa5;
+  --color-orange: #ff9d2f;
+  --color-text: #1a1a1a;
+  --color-text-muted: #6b6257;
+  --color-border: #1a1a1a;
+  --color-danger: #e0201f;
+  --color-success: #3aa655;
+  --border-width: 2px;
+  --shadow: 4px 4px 0 rgba(26, 26, 26, 0.9);
+  --on-primary: #ffffff;
+}
+
+[data-theme="youtube"] {
+  --color-bg: #f9f9f9;
+  --color-bg-gradient: none;
+  --color-surface: #ffffff;
+  --color-surface-2: #f2f2f2;
+  --color-primary: #ff0000;
+  --color-primary-dark: #cc0000;
+  --color-primary-soft: rgba(255, 0, 0, 0.08);
+  --color-secondary: #0f0f0f;
+  --color-accent: #ff0000;
+  --color-pink: #ff4e6a;
+  --color-orange: #ffa726;
+  --color-text: #0f0f0f;
+  --color-text-muted: #606060;
+  --color-border: #e5e5e5;
+  --color-danger: #cc0000;
+  --color-success: #2ba640;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.06);
+  --on-primary: #ffffff;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -130,6 +194,12 @@ body {
 
 /* Rainbow theme keeps its signature gradient backdrop */
 [data-theme="rainbow"] body {
+  background: var(--color-bg-gradient);
+  background-attachment: fixed;
+}
+
+/* K-pop theme keeps its holographic gradient backdrop */
+[data-theme="kpop"] body {
   background: var(--color-bg-gradient);
   background-attachment: fixed;
 }

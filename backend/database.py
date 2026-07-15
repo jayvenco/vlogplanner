@@ -9,6 +9,9 @@ UPLOADS_DIR = os.environ.get("UPLOADS_DIR", os.path.join(os.path.dirname(__file_
 THUMBNAILS_DIR = os.path.join(UPLOADS_DIR, "thumbnails")
 os.makedirs(THUMBNAILS_DIR, exist_ok=True)
 
+INSPIRATIONS_DIR = os.path.join(UPLOADS_DIR, "inspirations")
+os.makedirs(INSPIRATIONS_DIR, exist_ok=True)
+
 BACKUPS_DIR = os.environ.get("BACKUPS_DIR", os.path.join(os.path.dirname(__file__), "backups"))
 os.makedirs(BACKUPS_DIR, exist_ok=True)
 
@@ -46,6 +49,7 @@ SCHEMA_UPGRADE_STATEMENTS = [
     "ALTER TABLE idea_cards ADD COLUMN estimated_date DATE",
     "ALTER TABLE idea_cards ADD COLUMN template_key VARCHAR",
     "ALTER TABLE idea_cards ADD COLUMN ai_generations TEXT",
+    "ALTER TABLE inspirations ADD COLUMN image_path VARCHAR",
 ]
 
 

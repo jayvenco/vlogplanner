@@ -199,11 +199,15 @@ export interface Translations {
     typeLink: string;
     typeScreenshot: string;
     typeQuote: string;
+    typeImage: string;
     contentPlaceholder: string;
     tagsPlaceholder: string;
     add: string;
     filterByTag: string;
     empty: string;
+    uploadImage: string;
+    uploading: string;
+    imageCaptionPlaceholder: string;
   };
   tasks: {
     title: string;
@@ -502,11 +506,15 @@ export const nl: Translations = {
     typeLink: "Link",
     typeScreenshot: "Screenshot-notitie",
     typeQuote: "Quote",
+    typeImage: "Afbeelding",
     contentPlaceholder: "Link, notitie of quote...",
     tagsPlaceholder: "Tags (gescheiden door komma's)",
     add: "+ Toevoegen",
     filterByTag: "Filter op tag",
     empty: "Nog geen inspiratie opgeslagen.",
+    uploadImage: "Afbeelding kiezen",
+    uploading: "Bezig met uploaden...",
+    imageCaptionPlaceholder: "Bijschrift (optioneel)",
   },
   tasks: {
     title: "Taken",
@@ -805,11 +813,15 @@ export const en: Translations = {
     typeLink: "Link",
     typeScreenshot: "Screenshot note",
     typeQuote: "Quote",
+    typeImage: "Image",
     contentPlaceholder: "Link, note, or quote...",
     tagsPlaceholder: "Tags (comma-separated)",
     add: "+ Add",
     filterByTag: "Filter by tag",
     empty: "No inspiration saved yet.",
+    uploadImage: "Choose image",
+    uploading: "Uploading...",
+    imageCaptionPlaceholder: "Caption (optional)",
   },
   tasks: {
     title: "Tasks",

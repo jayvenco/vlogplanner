@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { api } from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
 import type { Inspiration, InspirationType } from "../types";
@@ -10,6 +10,9 @@ export default function Inspirations() {
   const [content, setContent] = useState("");
   const [tags, setTags] = useState("");
   const [tagFilter, setTagFilter] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function refresh(tag?: string) {
     const query = tag ? `?tag=${encodeURIComponent(tag)}` : "";
@@ -18,12 +21,34 @@ export default function Inspirations() {
 
   useEffect(() => refresh(), []);
 
-  async function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-    if (!content.trim()) return;
-    await api.post("/api/inspirations", { type, content, tags });
+  function resetForm() {
     setContent("");
     setTags("");
+    setImageFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  }
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    if (type === "image") {
+      if (!imageFile) return;
+      setUploading(true);
+      try {
+        const formData = new FormData();
+        formData.append("content", content);
+        formData.append("tags", tags);
+        formData.append("file", imageFile);
+        await api.post("/api/inspirations/with-image", formData);
+        resetForm();
+        refresh(tagFilter);
+      } finally {
+        setUploading(false);
+      }
+      return;
+    }
+    if (!content.trim()) return;
+    await api.post("/api/inspirations", { type, content, tags });
+    resetForm();
     refresh(tagFilter);
   }
 
@@ -41,6 +66,7 @@ export default function Inspirations() {
     link: t.inspiration.typeLink,
     screenshot_note: t.inspiration.typeScreenshot,
     quote: t.inspiration.typeQuote,
+    image: t.inspiration.typeImage,
   };
 
   return (
@@ -54,20 +80,44 @@ export default function Inspirations() {
           <option value="link">{t.inspiration.typeLink}</option>
           <option value="screenshot_note">{t.inspiration.typeScreenshot}</option>
           <option value="quote">{t.inspiration.typeQuote}</option>
+          <option value="image">{t.inspiration.typeImage}</option>
         </select>
-        <textarea
-          rows={2}
-          placeholder={t.inspiration.contentPlaceholder}
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        />
+        {type === "image" ? (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+            />
+            <button type="button" className="secondary" onClick={() => fileInputRef.current?.click()}>
+              {imageFile ? imageFile.name : t.inspiration.uploadImage}
+            </button>
+            <input
+              type="text"
+              placeholder={t.inspiration.imageCaptionPlaceholder}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+          </>
+        ) : (
+          <textarea
+            rows={2}
+            placeholder={t.inspiration.contentPlaceholder}
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          />
+        )}
         <input
           type="text"
           placeholder={t.inspiration.tagsPlaceholder}
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <button type="submit">{t.inspiration.add}</button>
+        <button type="submit" disabled={uploading}>
+          {uploading ? t.inspiration.uploading : t.inspiration.add}
+        </button>
       </form>
 
       <div className="card" style={{ marginBottom: "1.5rem" }}>
@@ -83,12 +133,18 @@ export default function Inspirations() {
           <div className="page-header" style={{ marginBottom: "0.5rem" }}>
             <div>
               <span className="chip" style={{ marginRight: "0.6rem" }}>{typeLabel[item.type]}</span>
-              <strong>{item.content}</strong>
+              {item.type !== "image" && <strong>{item.content}</strong>}
             </div>
             <button className="ghost small" onClick={() => handleDelete(item)} aria-label={t.common.remove}>
               ✕
             </button>
           </div>
+          {item.type === "image" && item.image_path && (
+            <div style={{ marginBottom: "0.5rem" }}>
+              <img src={item.image_path} alt={item.content || t.inspiration.typeImage} className="thumbnail-preview" />
+              {item.content && <p style={{ margin: "0.5rem 0 0" }}>{item.content}</p>}
+            </div>
+          )}
           {item.tags && (
             <div className="kanban-card-chips">
               {item.tags.split(",").map((tag) => (

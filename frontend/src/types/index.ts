@@ -5,7 +5,7 @@ export type KanbanColumn = "backlog" | "bezig" | "afgerond";
 export type TaskPriority = "hoog" | "normaal" | "laag";
 export type TargetAge = "13-17" | "18-24" | "25-34" | "35+";
 export type LLMProvider = "openai" | "anthropic" | "custom";
-export type InspirationType = "link" | "screenshot_note" | "quote";
+export type InspirationType = "link" | "screenshot_note" | "quote" | "image";
 
 export interface User {
   id: number;
@@ -194,5 +194,6 @@ export interface Inspiration {
   type: InspirationType;
   content: string;
   tags: string;
+  image_path: string | null;
   created_at: string;
 }

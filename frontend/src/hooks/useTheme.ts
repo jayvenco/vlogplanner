@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const THEME_KEY = "vlogplanner.theme";
-export type Theme = "light" | "dark" | "rainbow" | "cyberpunk" | "earth";
+export type Theme = "light" | "dark" | "rainbow" | "cyberpunk" | "earth" | "kpop" | "anime" | "youtube";
 
 export const THEME_OPTIONS: { value: Theme; label: string }[] = [
   { value: "light", label: "Licht" },
@@ -9,6 +9,9 @@ export const THEME_OPTIONS: { value: Theme; label: string }[] = [
   { value: "rainbow", label: "Rainbow" },
   { value: "cyberpunk", label: "Cyberpunk" },
   { value: "earth", label: "Earth colors" },
+  { value: "kpop", label: "K-pop" },
+  { value: "anime", label: "Anime" },
+  { value: "youtube", label: "YouTube" },
 ];
 
 const VALID_THEMES = THEME_OPTIONS.map((option) => option.value);

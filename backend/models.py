@@ -70,6 +70,7 @@ class InspirationType(str, enum.Enum):
     link = "link"
     screenshot_note = "screenshot_note"
     quote = "quote"
+    image = "image"
 
 
 class User(Base):
@@ -183,6 +184,7 @@ class Inspiration(Base):
     type = Column(Enum(InspirationType), default=InspirationType.link, nullable=False)
     content = Column(Text, nullable=False)
     tags = Column(String, default="")
+    image_path = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="inspirations")
