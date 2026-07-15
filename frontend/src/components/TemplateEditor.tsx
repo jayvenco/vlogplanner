@@ -93,8 +93,8 @@ export default function TemplateEditor({ template, tips, onFieldChange, onAskTip
           <div className="tip-history">
             {tips.map((tip) => (
               <div key={tip.id} className="tip-item">
-                <p className="tip-question">❓ {tip.question}</p>
-                <p className="tip-answer">💡 {tip.answer}</p>
+                <p className="tip-question">{tip.question}</p>
+                <p className="tip-answer">{tip.answer}</p>
               </div>
             ))}
           </div>

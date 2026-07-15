@@ -37,7 +37,11 @@ export default function Inspirations() {
     refresh(value);
   }
 
-  const typeIcon: Record<InspirationType, string> = { link: "🔗", screenshot_note: "🖼️", quote: "💬" };
+  const typeLabel: Record<InspirationType, string> = {
+    link: t.inspiration.typeLink,
+    screenshot_note: t.inspiration.typeScreenshot,
+    quote: t.inspiration.typeQuote,
+  };
 
   return (
     <div>
@@ -77,7 +81,10 @@ export default function Inspirations() {
       {items.map((item) => (
         <div key={item.id} className="card" style={{ marginBottom: "1rem" }}>
           <div className="page-header" style={{ marginBottom: "0.5rem" }}>
-            <strong>{typeIcon[item.type]} {item.content}</strong>
+            <div>
+              <span className="chip" style={{ marginRight: "0.6rem" }}>{typeLabel[item.type]}</span>
+              <strong>{item.content}</strong>
+            </div>
             <button className="ghost small" onClick={() => handleDelete(item)} aria-label={t.common.remove}>
               ✕
             </button>

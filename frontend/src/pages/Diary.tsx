@@ -65,8 +65,8 @@ export default function Diary() {
             {entry.entry_date}
             {projectTitle(entry.project_id) && ` · ${projectTitle(entry.project_id)}`}
           </strong>
-          <p>👍 {entry.wat_ging_goed || "-"}</p>
-          <p>💡 {entry.wat_kan_beter || "-"}</p>
+          <p><span className="entry-label">{t.diary.goodLabel}:</span> {entry.wat_ging_goed || "-"}</p>
+          <p><span className="entry-label">{t.diary.betterLabel}:</span> {entry.wat_kan_beter || "-"}</p>
         </div>
       ))}
     </div>

@@ -12,7 +12,7 @@ export default function ProjectCard({ project }: { project: Project }) {
         {project.thumbnail_path ? (
           <img src={project.thumbnail_path} alt={project.title} />
         ) : (
-          <span className="project-card-thumb-placeholder">🎬</span>
+          <span className="project-card-thumb-placeholder">{project.title.charAt(0).toUpperCase()}</span>
         )}
       </div>
       <div className="project-card-body">

@@ -44,7 +44,7 @@ export default function Settings() {
     refreshYoutubeStatus();
     const youtubeParam = searchParams.get("youtube");
     if (youtubeParam === "connected") {
-      setYoutubeMessage("✅ Verbonden met YouTube!");
+      setYoutubeMessage("Verbonden met YouTube!");
     } else if (youtubeParam === "error") {
       setYoutubeMessage("Het verbinden is niet gelukt. Probeer het opnieuw.");
     }
@@ -88,7 +88,7 @@ export default function Settings() {
         llm_custom_endpoint: provider === "custom" ? customEndpoint : null,
       });
       setApiKey("");
-      setMessage(`✅ ${t.common.save}!`);
+      setMessage(`${t.common.save}!`);
       await refreshUser();
     } finally {
       setSaving(false);
@@ -159,7 +159,6 @@ export default function Settings() {
               data-theme-preview={option.value}
               onClick={() => setTheme(option.value)}
             >
-              <span className="theme-swatch-icon">{option.icon}</span>
               <span>{option.label}</span>
             </button>
           ))}
@@ -170,10 +169,10 @@ export default function Settings() {
         <h2>{t.settings.languageTitle}</h2>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button className={language === "nl" ? "" : "ghost"} onClick={() => setLanguage("nl")}>
-            🇳🇱 {t.settings.dutch}
+            {t.settings.dutch}
           </button>
           <button className={language === "en" ? "" : "ghost"} onClick={() => setLanguage("en")}>
-            🇬🇧 {t.settings.english}
+            {t.settings.english}
           </button>
         </div>
       </div>

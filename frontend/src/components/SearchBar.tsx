@@ -47,7 +47,7 @@ export default function SearchBar() {
               <strong>{t.search.projects}</strong>
               {results.projects.map((p) => (
                 <Link key={p.id} to={`/projecten/${p.id}`} className="search-result-item">
-                  🎬 {p.title}
+                  {p.title}
                 </Link>
               ))}
             </div>
@@ -57,7 +57,7 @@ export default function SearchBar() {
               <strong>{t.search.ideas}</strong>
               {results.ideas.map((i) => (
                 <Link key={i.id} to="/ideeen" className="search-result-item">
-                  💡 {i.title}
+                  {i.title}
                 </Link>
               ))}
             </div>
@@ -67,7 +67,7 @@ export default function SearchBar() {
               <strong>{t.search.tasks}</strong>
               {results.tasks.map((taskItem) => (
                 <Link key={taskItem.id} to="/taken" className="search-result-item">
-                  📋 {taskItem.title}
+                  {taskItem.title}
                 </Link>
               ))}
             </div>

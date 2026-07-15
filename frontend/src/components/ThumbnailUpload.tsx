@@ -45,7 +45,7 @@ export default function ThumbnailUpload({ projectId, thumbnailPath, onUploaded }
       {thumbnailPath ? (
         <img src={thumbnailPath} alt="Thumbnail" className="thumbnail-preview" />
       ) : (
-        <div className="thumbnail-preview thumbnail-placeholder">🖼️</div>
+        <div className="thumbnail-preview thumbnail-placeholder" />
       )}
       <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleFileChange} />
       <button className="secondary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>

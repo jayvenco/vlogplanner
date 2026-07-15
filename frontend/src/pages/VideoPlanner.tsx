@@ -10,9 +10,7 @@ export default function VideoPlanner() {
       <p>{t.videoPlanner.intro}</p>
       {t.videoPlanner.steps.map((step) => (
         <div key={step.title} className="card planner-step">
-          <h2>
-            {step.icon} {step.title}
-          </h2>
+          <h2>{step.title}</h2>
           <ul>
             {step.points.map((point) => (
               <li key={point}>{point}</li>

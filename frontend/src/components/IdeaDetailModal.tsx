@@ -121,7 +121,7 @@ export default function IdeaDetailModal({ idea, templates, hasLlmKey, onClose, o
               <option value="">{t.ideas.noTemplate}</option>
               {templates.map((tpl) => (
                 <option key={tpl.key} value={tpl.key}>
-                  {tpl.icon} {tpl.name}
+                  {tpl.name}
                 </option>
               ))}
             </select>

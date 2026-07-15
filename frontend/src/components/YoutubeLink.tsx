@@ -86,7 +86,7 @@ export default function YoutubeLink({ project, onLinked }: Props) {
           </p>
           {stats && (
             <p>
-              👁️ {stats.view_count ?? "?"} {t.youtubeLink.viewsLikes} · 👍 {stats.like_count ?? "?"} likes
+              {stats.view_count ?? "?"} {t.youtubeLink.viewsLikes} · {stats.like_count ?? "?"} likes
             </p>
           )}
           <button className="ghost" onClick={handleUnlink}>

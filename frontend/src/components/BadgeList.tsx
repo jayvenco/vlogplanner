@@ -5,7 +5,6 @@ export default function BadgeList({ badges }: { badges: Badge[] }) {
     <div className="badge-list">
       {badges.map((badge) => (
         <div key={badge.key} className={"badge-chip" + (badge.earned ? " earned" : " locked")} title={badge.title}>
-          <span className="badge-icon">{badge.icon}</span>
           <span>{badge.title}</span>
         </div>
       ))}

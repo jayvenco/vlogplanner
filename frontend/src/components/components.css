@@ -11,7 +11,7 @@
 
 .page-header h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 
 .error-text {
@@ -19,14 +19,19 @@
   font-weight: 700;
 }
 
+.entry-label {
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
 /* Quote banner */
 .quote-banner {
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary), var(--color-pink));
-  color: white;
+  background: var(--color-primary);
+  color: var(--on-primary);
   border-radius: var(--radius-lg);
   padding: 1.1rem 1.5rem;
-  font-weight: 800;
-  font-size: 1.1rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow);
 }
@@ -35,7 +40,7 @@
 .progress-bar {
   position: relative;
   background: var(--color-border);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   height: 20px;
   margin-top: 0.6rem;
   overflow: hidden;
@@ -44,7 +49,7 @@
 .progress-bar-fill {
   background: linear-gradient(90deg, var(--color-accent), var(--color-secondary));
   height: 100%;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   transition: width 0.3s ease;
 }
 
@@ -63,7 +68,7 @@
 .status-badge {
   display: inline-block;
   padding: 0.3rem 0.8rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   font-size: 0.85rem;
   font-weight: 800;
   background: var(--color-bg);
@@ -135,7 +140,16 @@
 }
 
 .project-card-thumb-placeholder {
-  font-size: 3rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 1.5rem;
+  font-weight: 800;
 }
 
 .project-card-body {
@@ -337,11 +351,34 @@
 
 .priority-chip,
 .deadline-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-size: 0.82rem;
   font-weight: 700;
   padding: 0.2rem 0.55rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: var(--color-bg);
+}
+
+.priority-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--color-text-muted);
+}
+
+.priority-hoog .priority-dot {
+  background: var(--color-danger);
+}
+
+.priority-normaal .priority-dot {
+  background: var(--color-orange);
+}
+
+.priority-laag .priority-dot {
+  background: var(--color-success);
 }
 
 /* Badges */
@@ -356,23 +393,21 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.9rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--color-border);
   font-weight: 700;
   font-size: 0.9rem;
-  background: var(--color-bg);
+  background: var(--color-surface);
 }
 
 .badge-chip.earned {
-  background: linear-gradient(135deg, var(--color-accent), var(--color-secondary));
-  color: #12213a;
+  background: var(--color-primary-soft);
+  border-color: transparent;
+  color: var(--color-primary-dark);
 }
 
 .badge-chip.locked {
   opacity: 0.45;
-}
-
-.badge-icon {
-  font-size: 1.3rem;
 }
 
 /* Thumbnail upload */
@@ -395,7 +430,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  border: var(--border-width) dashed var(--color-border);
+  background: var(--color-bg);
 }
 
 /* Buttons */
@@ -550,10 +586,6 @@ button.small {
   border-color: var(--color-text);
 }
 
-.theme-swatch-icon {
-  font-size: 1.6rem;
-}
-
 .theme-swatch[data-theme-preview="light"] {
   background: linear-gradient(160deg, #f8f9fc 0%, #eef0f6 100%);
   color: #16151f;
@@ -641,10 +673,11 @@ button.small {
 .chip {
   display: inline-block;
   padding: 0.15rem 0.5rem;
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
+  border: var(--border-width) solid var(--color-border);
   font-size: 0.78rem;
   font-weight: 700;
-  background: var(--color-bg);
+  background: var(--color-surface);
   color: var(--color-text-muted);
 }
 

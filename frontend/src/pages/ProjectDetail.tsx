@@ -255,8 +255,8 @@ export default function ProjectDetail() {
           {diaryEntries.map((entry) => (
             <div key={entry.id} className="card" style={{ marginBottom: "1rem" }}>
               <strong>{entry.entry_date}</strong>
-              <p>👍 {entry.wat_ging_goed || "-"}</p>
-              <p>💡 {entry.wat_kan_beter || "-"}</p>
+              <p><span className="entry-label">{t.diary.goodLabel}:</span> {entry.wat_ging_goed || "-"}</p>
+              <p><span className="entry-label">{t.diary.betterLabel}:</span> {entry.wat_kan_beter || "-"}</p>
             </div>
           ))}
         </div>

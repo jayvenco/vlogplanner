@@ -23,8 +23,11 @@ export default function TaskItem({ task, onToggle, onDelete }: Props) {
         <span className="task-title">{task.title}</span>
       </label>
       <div className="task-meta">
-        <span className={`priority-chip priority-${task.priority}`}>{PRIORITY_LABELS[task.priority]}</span>
-        {task.deadline && <span className="deadline-chip">📅 {task.deadline}</span>}
+        <span className={`priority-chip priority-${task.priority}`}>
+          <span className="priority-dot" />
+          {PRIORITY_LABELS[task.priority]}
+        </span>
+        {task.deadline && <span className="deadline-chip">{task.deadline}</span>}
         <button className="ghost small" onClick={() => onDelete(task)} aria-label={t.common.remove}>
           ✕
         </button>
