@@ -30,10 +30,20 @@ export default function Settings() {
   const [youtubeMessage, setYoutubeMessage] = useState<string | null>(null);
   const [youtubeBusy, setYoutubeBusy] = useState(false);
 
+  const [youtubeClientId, setYoutubeClientId] = useState("");
+  const [youtubeClientSecret, setYoutubeClientSecret] = useState("");
+  const [youtubeRedirectUri, setYoutubeRedirectUri] = useState("");
+  const [savingYoutubeConfig, setSavingYoutubeConfig] = useState(false);
+
+  const [youtubeApiKey, setYoutubeApiKey] = useState("");
+  const [savingYoutubeApiKey, setSavingYoutubeApiKey] = useState(false);
+
   useEffect(() => {
     if (user?.llm_provider) setProvider(user.llm_provider);
     if (user?.llm_model) setModel(user.llm_model);
     if (user?.llm_custom_endpoint) setCustomEndpoint(user.llm_custom_endpoint);
+    if (user?.youtube_client_id) setYoutubeClientId(user.youtube_client_id);
+    if (user?.youtube_redirect_uri) setYoutubeRedirectUri(user.youtube_redirect_uri);
   }, [user]);
 
   function refreshYoutubeStatus() {
@@ -74,6 +84,60 @@ export default function Settings() {
       refreshYoutubeStatus();
     } finally {
       setYoutubeBusy(false);
+    }
+  }
+
+  async function handleSaveYoutubeConfig() {
+    setSavingYoutubeConfig(true);
+    try {
+      await api.put<User>("/api/auth/me", {
+        youtube_client_id: youtubeClientId,
+        youtube_client_secret: youtubeClientSecret,
+        youtube_redirect_uri: youtubeRedirectUri,
+      });
+      setYoutubeClientSecret("");
+      await refreshUser();
+    } finally {
+      setSavingYoutubeConfig(false);
+    }
+  }
+
+  async function handleRemoveYoutubeConfig() {
+    setSavingYoutubeConfig(true);
+    try {
+      await api.put<User>("/api/auth/me", {
+        youtube_client_id: null,
+        youtube_client_secret: null,
+        youtube_redirect_uri: null,
+      });
+      setYoutubeClientId("");
+      setYoutubeClientSecret("");
+      setYoutubeRedirectUri("");
+      await refreshUser();
+    } finally {
+      setSavingYoutubeConfig(false);
+    }
+  }
+
+  async function handleSaveYoutubeApiKey() {
+    setSavingYoutubeApiKey(true);
+    try {
+      await api.put<User>("/api/auth/me", { youtube_api_key: youtubeApiKey });
+      setYoutubeApiKey("");
+      await refreshUser();
+    } finally {
+      setSavingYoutubeApiKey(false);
+    }
+  }
+
+  async function handleRemoveYoutubeApiKey() {
+    setSavingYoutubeApiKey(true);
+    try {
+      await api.put<User>("/api/auth/me", { youtube_api_key: null });
+      setYoutubeApiKey("");
+      await refreshUser();
+    } finally {
+      setSavingYoutubeApiKey(false);
     }
   }
 
@@ -231,6 +295,39 @@ export default function Settings() {
 
       <div className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.youtubeTitle}</h2>
+        <p className="template-hint">{t.settings.youtubeOauthHint}</p>
+        <input
+          type="text"
+          placeholder={t.settings.youtubeClientIdPlaceholder}
+          value={youtubeClientId}
+          onChange={(e) => setYoutubeClientId(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder={t.settings.youtubeClientSecretPlaceholder}
+          value={youtubeClientSecret}
+          onChange={(e) => setYoutubeClientSecret(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder={t.settings.youtubeRedirectUriPlaceholder}
+          value={youtubeRedirectUri}
+          onChange={(e) => setYoutubeRedirectUri(e.target.value)}
+        />
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <button
+            onClick={handleSaveYoutubeConfig}
+            disabled={savingYoutubeConfig || !youtubeClientId.trim() || !youtubeRedirectUri.trim()}
+          >
+            {t.settings.youtubeOauthSave}
+          </button>
+          {user?.has_youtube_oauth_config && (
+            <button className="ghost" onClick={handleRemoveYoutubeConfig} disabled={savingYoutubeConfig}>
+              {t.settings.youtubeOauthRemove}
+            </button>
+          )}
+        </div>
+
         {youtubeStatus?.connected ? (
           <>
             <p>
@@ -253,6 +350,27 @@ export default function Settings() {
           </>
         )}
         {youtubeMessage && <p>{youtubeMessage}</p>}
+      </div>
+
+      <div className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+        <h2>{t.settings.youtubeApiKeyTitle}</h2>
+        <p>{user?.has_youtube_api_key ? t.settings.youtubeApiKeySet : t.settings.youtubeApiKeyNotSet}</p>
+        <input
+          type="password"
+          placeholder={t.settings.youtubeApiKeyPlaceholder}
+          value={youtubeApiKey}
+          onChange={(e) => setYoutubeApiKey(e.target.value)}
+        />
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <button onClick={handleSaveYoutubeApiKey} disabled={savingYoutubeApiKey || !youtubeApiKey.trim()}>
+            {t.settings.youtubeApiKeySave}
+          </button>
+          {user?.has_youtube_api_key && (
+            <button className="ghost" onClick={handleRemoveYoutubeApiKey} disabled={savingYoutubeApiKey}>
+              {t.settings.youtubeApiKeyRemove}
+            </button>
+          )}
+        </div>
       </div>
 
       <button className="danger" onClick={logout}>

@@ -89,6 +89,10 @@ class User(Base):
     youtube_token_expires_at = Column(DateTime, nullable=True)
     youtube_channel_id = Column(String, nullable=True)
     youtube_channel_title = Column(String, nullable=True)
+    youtube_client_id = Column(String, nullable=True)
+    youtube_client_secret_encrypted = Column(String, nullable=True)
+    youtube_redirect_uri = Column(String, nullable=True)
+    youtube_api_key_encrypted = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")

@@ -5,6 +5,7 @@ from urllib.parse import urlencode
 import requests
 from sqlalchemy.orm import Session
 
+from crypto_utils import decrypt
 from models import User
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
@@ -25,19 +26,23 @@ class YoutubeApiError(Exception):
     pass
 
 
-def _get_config():
-    client_id = os.environ.get("YOUTUBE_CLIENT_ID")
-    client_secret = os.environ.get("YOUTUBE_CLIENT_SECRET")
-    redirect_uri = os.environ.get("YOUTUBE_REDIRECT_URI")
+def _get_config(user: User):
+    client_id = user.youtube_client_id or os.environ.get("YOUTUBE_CLIENT_ID")
+    client_secret = (
+        decrypt(user.youtube_client_secret_encrypted)
+        if user.youtube_client_secret_encrypted
+        else os.environ.get("YOUTUBE_CLIENT_SECRET")
+    )
+    redirect_uri = user.youtube_redirect_uri or os.environ.get("YOUTUBE_REDIRECT_URI")
     if not client_id or not client_secret or not redirect_uri:
         raise YoutubeNotConfiguredError(
-            "YouTube-koppeling is nog niet geconfigureerd. Vraag een volwassene om dit in te stellen."
+            "Vul eerst je Google OAuth-gegevens in bij Instellingen (Client ID, Client Secret, Redirect URI)."
         )
     return client_id, client_secret, redirect_uri
 
 
-def build_auth_url(state: str) -> str:
-    client_id, _client_secret, redirect_uri = _get_config()
+def build_auth_url(state: str, user: User) -> str:
+    client_id, _client_secret, redirect_uri = _get_config(user)
     params = {
         "client_id": client_id,
         "redirect_uri": redirect_uri,
@@ -50,8 +55,8 @@ def build_auth_url(state: str) -> str:
     return f"{AUTH_URL}?{urlencode(params)}"
 
 
-def exchange_code(code: str) -> dict:
-    client_id, client_secret, redirect_uri = _get_config()
+def exchange_code(code: str, user: User) -> dict:
+    client_id, client_secret, redirect_uri = _get_config(user)
     response = requests.post(
         TOKEN_URL,
         data={
@@ -68,8 +73,8 @@ def exchange_code(code: str) -> dict:
     return response.json()
 
 
-def refresh_access_token(refresh_token: str) -> dict:
-    client_id, client_secret, _redirect_uri = _get_config()
+def refresh_access_token(refresh_token: str, user: User) -> dict:
+    client_id, client_secret, _redirect_uri = _get_config(user)
     response = requests.post(
         TOKEN_URL,
         data={
@@ -92,7 +97,7 @@ def get_valid_access_token(user: User, db: Session) -> str:
     if user.youtube_token_expires_at and user.youtube_token_expires_at > datetime.utcnow():
         return user.youtube_access_token
 
-    data = refresh_access_token(user.youtube_refresh_token)
+    data = refresh_access_token(user.youtube_refresh_token, user)
     user.youtube_access_token = data["access_token"]
     user.youtube_token_expires_at = datetime.utcnow() + timedelta(seconds=data.get("expires_in", 3600))
     db.commit()

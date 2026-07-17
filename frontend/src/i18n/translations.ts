@@ -249,11 +249,23 @@ export interface Translations {
     aiVerify: string;
     aiVerifying: string;
     youtubeTitle: string;
+    youtubeOauthHint: string;
+    youtubeClientIdPlaceholder: string;
+    youtubeClientSecretPlaceholder: string;
+    youtubeRedirectUriPlaceholder: string;
+    youtubeOauthSave: string;
+    youtubeOauthRemove: string;
     youtubeConnected: string;
     youtubeNotConnected: string;
     youtubeConnect: string;
     youtubeDisconnect: string;
     youtubeConnecting: string;
+    youtubeApiKeyTitle: string;
+    youtubeApiKeySet: string;
+    youtubeApiKeyNotSet: string;
+    youtubeApiKeyPlaceholder: string;
+    youtubeApiKeySave: string;
+    youtubeApiKeyRemove: string;
     logout: string;
   };
   youtubeLink: {
@@ -556,11 +568,23 @@ export const nl: Translations = {
     aiVerify: "Verifieer API key",
     aiVerifying: "Bezig met verifiëren...",
     youtubeTitle: "YouTube",
+    youtubeOauthHint: "Google OAuth 2.0-clientgegevens (Google Cloud Console). Nodig om je kanaal te kunnen koppelen.",
+    youtubeClientIdPlaceholder: "Client ID",
+    youtubeClientSecretPlaceholder: "Client secret",
+    youtubeRedirectUriPlaceholder: "Redirect URI",
+    youtubeOauthSave: "Opslaan",
+    youtubeOauthRemove: "Verwijderen",
     youtubeConnected: "Verbonden met kanaal:",
-    youtubeNotConnected: "Niet verbonden — koppel je YouTube-kanaal om gepubliceerde projecten aan je echte video's te linken.",
+    youtubeNotConnected: "Niet verbonden — vul hierboven je Google OAuth-gegevens in en koppel dan je YouTube-kanaal.",
     youtubeConnect: "Verbind met YouTube",
     youtubeDisconnect: "Loskoppelen",
     youtubeConnecting: "Bezig...",
+    youtubeApiKeyTitle: "YouTube API-sleutel (Trends)",
+    youtubeApiKeySet: "Sleutel ingesteld",
+    youtubeApiKeyNotSet: "Nog geen sleutel ingesteld",
+    youtubeApiKeyPlaceholder: "YouTube Data API-sleutel",
+    youtubeApiKeySave: "Opslaan",
+    youtubeApiKeyRemove: "Verwijderen",
     logout: "Uitloggen",
   },
   youtubeLink: {
@@ -863,11 +887,23 @@ export const en: Translations = {
     aiVerify: "Verify API key",
     aiVerifying: "Verifying...",
     youtubeTitle: "YouTube",
+    youtubeOauthHint: "Google OAuth 2.0 client credentials (Google Cloud Console). Needed to link your channel.",
+    youtubeClientIdPlaceholder: "Client ID",
+    youtubeClientSecretPlaceholder: "Client secret",
+    youtubeRedirectUriPlaceholder: "Redirect URI",
+    youtubeOauthSave: "Save",
+    youtubeOauthRemove: "Remove",
     youtubeConnected: "Connected to channel:",
-    youtubeNotConnected: "Not connected — link your YouTube channel to connect published projects to your real videos.",
+    youtubeNotConnected: "Not connected — fill in your Google OAuth credentials above, then link your YouTube channel.",
     youtubeConnect: "Connect with YouTube",
     youtubeDisconnect: "Disconnect",
     youtubeConnecting: "Working...",
+    youtubeApiKeyTitle: "YouTube API key (Trends)",
+    youtubeApiKeySet: "Key configured",
+    youtubeApiKeyNotSet: "No key configured yet",
+    youtubeApiKeyPlaceholder: "YouTube Data API key",
+    youtubeApiKeySave: "Save",
+    youtubeApiKeyRemove: "Remove",
     logout: "Log out",
   },
   youtubeLink: {

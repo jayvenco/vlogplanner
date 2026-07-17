@@ -50,6 +50,10 @@ SCHEMA_UPGRADE_STATEMENTS = [
     "ALTER TABLE idea_cards ADD COLUMN template_key VARCHAR",
     "ALTER TABLE idea_cards ADD COLUMN ai_generations TEXT",
     "ALTER TABLE inspirations ADD COLUMN image_path VARCHAR",
+    "ALTER TABLE users ADD COLUMN youtube_client_id VARCHAR",
+    "ALTER TABLE users ADD COLUMN youtube_client_secret_encrypted VARCHAR",
+    "ALTER TABLE users ADD COLUMN youtube_redirect_uri VARCHAR",
+    "ALTER TABLE users ADD COLUMN youtube_api_key_encrypted VARCHAR",
 ]
 
 

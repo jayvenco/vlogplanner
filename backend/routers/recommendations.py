@@ -1,6 +1,9 @@
+import os
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from crypto_utils import decrypt
 from database import get_db
 from models import User
 from schemas import RecommendationRequest, RecommendationOut, ContentTemplateOut
@@ -40,8 +43,9 @@ def recommend(
 
     theme_words = [w for w in payload.theme.lower().split() if len(w) > 2]
 
+    api_key = decrypt(current_user.youtube_api_key_encrypted) if current_user.youtube_api_key_encrypted else os.environ.get("YOUTUBE_API_KEY")
     try:
-        trends = get_trending(db, "NL", category_id)
+        trends = get_trending(db, "NL", category_id, api_key)
     except YoutubeApiKeyNotConfiguredError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     except Exception as exc:

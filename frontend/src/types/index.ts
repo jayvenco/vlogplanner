@@ -16,6 +16,10 @@ export interface User {
   llm_provider: LLMProvider | null;
   llm_model: string | null;
   llm_custom_endpoint: string | null;
+  youtube_client_id: string | null;
+  youtube_redirect_uri: string | null;
+  has_youtube_oauth_config: boolean;
+  has_youtube_api_key: boolean;
 }
 
 export interface ChecklistItem {

@@ -1,5 +1,4 @@
 import json
-import os
 import re
 from collections import Counter
 from datetime import datetime, timedelta, timezone
@@ -49,11 +48,10 @@ def _view_velocity(view_count: int, published_at: str) -> float:
     return round(view_count / days, 1)
 
 
-def _fetch_from_youtube(region_code: str, category_id: str) -> dict:
-    api_key = os.environ.get("YOUTUBE_API_KEY")
+def _fetch_from_youtube(region_code: str, category_id: str, api_key: str) -> dict:
     if not api_key:
         raise YoutubeApiKeyNotConfiguredError(
-            "Er is nog geen YouTube API-sleutel geconfigureerd. Vraag een volwassene om YOUTUBE_API_KEY in te stellen."
+            "Er is nog geen YouTube API-sleutel ingesteld. Vul deze in bij Instellingen."
         )
 
     response = requests.get(
@@ -93,7 +91,7 @@ def _fetch_from_youtube(region_code: str, category_id: str) -> dict:
     return {"keywords": _extract_keywords(videos), "videos": videos}
 
 
-def get_trending(db: Session, region_code: str, category_id: str) -> dict:
+def get_trending(db: Session, region_code: str, category_id: str, api_key: str) -> dict:
     cached = (
         db.query(TrendsCache)
         .filter(TrendsCache.region_code == region_code, TrendsCache.category_id == category_id)
@@ -103,7 +101,7 @@ def get_trending(db: Session, region_code: str, category_id: str) -> dict:
         payload = json.loads(cached.data)
         return {"fetched_at": cached.fetched_at, **payload}
 
-    payload = _fetch_from_youtube(region_code, category_id)
+    payload = _fetch_from_youtube(region_code, category_id, api_key)
 
     if cached:
         cached.data = json.dumps(payload)

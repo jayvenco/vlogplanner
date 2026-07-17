@@ -19,7 +19,7 @@ router = APIRouter()
 def get_auth_url(current_user: User = Depends(get_current_user)):
     try:
         state = create_oauth_state_token(current_user.id)
-        url = yt.build_auth_url(state)
+        url = yt.build_auth_url(state, current_user)
     except YoutubeNotConfiguredError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     return {"url": url}
@@ -36,7 +36,7 @@ def oauth_callback(code: Optional[str] = None, state: Optional[str] = None, db: 
         if not user:
             return RedirectResponse("/instellingen?youtube=error")
 
-        token_data = yt.exchange_code(code)
+        token_data = yt.exchange_code(code, user)
         user.youtube_access_token = token_data["access_token"]
         user.youtube_refresh_token = token_data.get("refresh_token") or user.youtube_refresh_token
         user.youtube_token_expires_at = datetime.utcnow() + timedelta(seconds=token_data.get("expires_in", 3600))

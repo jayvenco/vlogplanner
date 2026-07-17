@@ -62,6 +62,16 @@ def update_me(
         current_user.llm_model = data["llm_model"] or None
     if "llm_custom_endpoint" in data:
         current_user.llm_custom_endpoint = data["llm_custom_endpoint"] or None
+    if "youtube_client_id" in data:
+        current_user.youtube_client_id = data["youtube_client_id"] or None
+    if "youtube_client_secret" in data:
+        current_user.youtube_client_secret_encrypted = (
+            encrypt(data["youtube_client_secret"]) if data["youtube_client_secret"] else None
+        )
+    if "youtube_redirect_uri" in data:
+        current_user.youtube_redirect_uri = data["youtube_redirect_uri"] or None
+    if "youtube_api_key" in data:
+        current_user.youtube_api_key_encrypted = encrypt(data["youtube_api_key"]) if data["youtube_api_key"] else None
     db.commit()
     db.refresh(current_user)
     return UserOut.from_user(current_user)

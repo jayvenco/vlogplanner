@@ -37,11 +37,17 @@ class UserOut(BaseModel):
     llm_provider: Optional[LLMProvider] = None
     llm_model: Optional[str] = None
     llm_custom_endpoint: Optional[str] = None
+    youtube_client_id: Optional[str] = None
+    youtube_redirect_uri: Optional[str] = None
+    has_youtube_oauth_config: bool = False
+    has_youtube_api_key: bool = False
 
     @classmethod
     def from_user(cls, user) -> "UserOut":
         out = cls.model_validate(user)
         out.has_llm_key = bool(user.llm_api_key_encrypted)
+        out.has_youtube_oauth_config = bool(user.youtube_client_secret_encrypted)
+        out.has_youtube_api_key = bool(user.youtube_api_key_encrypted)
         return out
 
 
@@ -50,6 +56,10 @@ class UserSettingsUpdate(BaseModel):
     llm_api_key: Optional[str] = None
     llm_model: Optional[str] = None
     llm_custom_endpoint: Optional[str] = None
+    youtube_client_id: Optional[str] = None
+    youtube_client_secret: Optional[str] = None
+    youtube_redirect_uri: Optional[str] = None
+    youtube_api_key: Optional[str] = None
 
 
 class LLMVerifyRequest(BaseModel):

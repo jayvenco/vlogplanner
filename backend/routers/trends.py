@@ -1,6 +1,9 @@
+import os
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from crypto_utils import decrypt
 from database import get_db
 from models import User
 from schemas import TrendsOut
@@ -22,8 +25,9 @@ def trending(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
+    api_key = decrypt(current_user.youtube_api_key_encrypted) if current_user.youtube_api_key_encrypted else os.environ.get("YOUTUBE_API_KEY")
     try:
-        data = get_trending(db, region, category)
+        data = get_trending(db, region, category, api_key)
     except YoutubeApiKeyNotConfiguredError as exc:
         raise HTTPException(status_code=400, detail=str(exc))
     except Exception as exc:
