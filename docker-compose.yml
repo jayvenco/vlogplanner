@@ -1,6 +1,6 @@
 services:
   backend:
-    build: ./backend
+    image: ghcr.io/jayvenco/vlogplanner-backend:latest
     environment:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-please-change-this-secret-in-your-env-file}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}
@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
+    image: ghcr.io/jayvenco/vlogplanner-frontend:latest
     ports:
       - "${FRONTEND_PORT:-3000}:80"
     depends_on:
