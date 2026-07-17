@@ -27,7 +27,7 @@ def _call_openai(api_key: str, model: str, system_prompt: str, user_prompt: str)
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            max_tokens=500,
+            max_completion_tokens=500,
         )
     except OpenAIError as exc:
         raise LLMRequestError(f"OpenAI-fout: {exc}") from exc
