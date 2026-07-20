@@ -35,7 +35,7 @@ docker compose pull
 docker compose up -d
 ```
 
-Open daarna **http://localhost:3000** in de browser. Klaar!
+Open daarna **http://localhost:7766** in de browser. Klaar!
 
 > **Eenmalige setup na de allereerste push:** GitHub Actions bouwt de image en zet 'm in GitHub Container Registry, maar een nieuwe package staat daar standaard op **Private** — ook als de repo zelf privé is, kun je de package apart op **Public** zetten zodat `docker compose pull` overal werkt zonder in te loggen. Ga naar je GitHub-profiel → **Packages**, open `vlogplanner`, **Package settings → Change visibility → Public**. Dit hoeft je maar één keer te doen; elke volgende push naar `main` bouwt gewoon een nieuwe versie van dezelfde (publieke) package.
 
@@ -72,11 +72,11 @@ docker compose pull
 docker compose up -d
 ```
 
-Open daarna `http://<jouw-unraid-ip>:3000`. Data (database, uploads, back-ups) blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map.
+Open daarna `http://<jouw-unraid-ip>:7766`. Data (database, uploads, back-ups) blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map.
 
 Updaten op Unraid gaat hetzelfde als hierboven: `cd /mnt/user/appdata/vlogplanner && git pull && docker compose pull && docker compose up -d`.
 
-Poort 3000 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie" hierboven) vóórdat je `docker compose up` draait.
+Poort 7766 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie" hierboven) vóórdat je `docker compose up` draait.
 
 Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
 
@@ -105,7 +105,7 @@ Open **http://localhost:5173**. Vite proxyt `/api` en `/uploads` automatisch naa
 
 ## Productie
 
-`docker compose pull && docker compose up -d` haalt de kant-en-klare image op (gebouwd door GitHub Actions) en start één container op de achtergrond: FastAPI serveert zowel de API (`/api/*`, `/uploads/*`) als de gebouwde React-app, op poort 3000 (te wijzigen via `FRONTEND_PORT`).
+`docker compose pull && docker compose up -d` haalt de kant-en-klare image op (gebouwd door GitHub Actions) en start één container op de achtergrond: FastAPI serveert zowel de API (`/api/*`, `/uploads/*`) als de gebouwde React-app, op poort 7766 (te wijzigen via `FRONTEND_PORT`).
 
 Data blijft bewaard in de bind-mounts `./data` (database), `./uploads` (thumbnails) en `./backups` (automatische back-ups), ook na `docker compose down`. Gebruik `docker compose down -v` alleen als je bewust alles wilt wissen (let op: dit verwijdert geen bind-mounts, enkel eventuele named volumes).
 
@@ -123,7 +123,7 @@ Om projecten te kunnen koppelen aan echte YouTube-video's (zie "YouTube" hierond
 4. Ga naar **APIs & Services → Credentials → Create Credentials → OAuth client ID**, kies type **Web application**.
 5. Voeg bij **Authorized redirect URIs** exact toe:
    - Lokaal ontwikkelen: `http://localhost:5173/api/youtube/callback`
-   - Productie (Docker): `http://<jouw-host>:3000/api/youtube/callback` (of je eigen domein/poort)
+   - Productie (Docker): `http://<jouw-host>:7766/api/youtube/callback` (of je eigen domein/poort)
 6. Kopieer de **Client ID** en **Client secret** naar je `.env`-bestand:
 
 ```bash
