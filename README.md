@@ -22,7 +22,9 @@ Een vrolijke, eenvoudige webapp die jonge content creators stap voor stap helpt 
 
 Vereisten: [Docker](https://www.docker.com/) en Docker Compose.
 
-De Docker-images worden kant-en-klaar gebouwd door GitHub Actions (zie `.github/workflows/docker-build.yml`) en gepubliceerd op GitHub Container Registry. Er hoeft dus **niets lokaal gecompileerd te worden** — `docker compose pull` haalt gewoon de laatste kant-en-klare image op.
+Frontend en backend draaien samen in **één container** (FastAPI serveert zowel de API als de gebouwde React-app) — handig voor lokaal gebruik op je eigen LAN, geen aparte nginx-container of poort-gedoe nodig.
+
+De Docker-image wordt kant-en-klaar gebouwd door GitHub Actions (zie `.github/workflows/docker-build.yml`) en gepubliceerd op GitHub Container Registry. Er hoeft dus **niets lokaal gecompileerd te worden** — `docker compose pull` haalt gewoon de laatste kant-en-klare image op.
 
 > **Als de eerste Actions-run faalt met een 403/permission-fout bij het pushen:** ga naar de repo-instellingen → **Actions → General → Workflow permissions** en zet die op **Read and write permissions**. Nieuwe repositories staan soms standaard op alleen-lezen, waardoor de workflow geen packages mag publiceren.
 
@@ -35,7 +37,7 @@ docker compose up -d
 
 Open daarna **http://localhost:3000** in de browser. Klaar!
 
-> **Eenmalige setup na de allereerste push:** GitHub Actions bouwt de images en zet ze in GitHub Container Registry, maar nieuwe packages staan daar standaard op **Private** — ook als de repo zelf privé is, kun je de packages apart op **Public** zetten zodat `docker compose pull` overal werkt zonder in te loggen. Ga naar je GitHub-profiel → **Packages**, open `vlogplanner-backend`, **Package settings → Change visibility → Public**, en herhaal dat voor `vlogplanner-frontend`. Dit hoeft je maar één keer te doen; elke volgende push naar `main` bouwt gewoon een nieuwe versie van dezelfde (publieke) package.
+> **Eenmalige setup na de allereerste push:** GitHub Actions bouwt de image en zet 'm in GitHub Container Registry, maar een nieuwe package staat daar standaard op **Private** — ook als de repo zelf privé is, kun je de package apart op **Public** zetten zodat `docker compose pull` overal werkt zonder in te loggen. Ga naar je GitHub-profiel → **Packages**, open `vlogplanner`, **Package settings → Change visibility → Public**. Dit hoeft je maar één keer te doen; elke volgende push naar `main` bouwt gewoon een nieuwe versie van dezelfde (publieke) package.
 
 De database (SQLite) en geüploade thumbnails worden automatisch aangemaakt in `./data` en `./uploads` bij de eerste start — geen handmatige configuratie nodig.
 
@@ -78,7 +80,7 @@ Poort 3000 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poor
 
 Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
 
-**Zelf bouwen in plaats van de kant-en-klare image pullen?** Vervang in `docker-compose.yml` de `image:`-regel tijdelijk door `build: ./backend` (of `./frontend`) en draai `docker compose up --build -d`. Kom je dan de foutmelding `compose build requires buildx 0.17.0 or later` tegen (bekend op oudere Unraid-installaties met een verouderde `buildx`-plugin)? Zet dan `DOCKER_BUILDKIT=0` vóór het commando, of permanent in je `.env`-bestand.
+**Zelf bouwen in plaats van de kant-en-klare image pullen?** Vervang in `docker-compose.yml` de `image:`-regel tijdelijk door `build: .` en draai `docker compose up --build -d`. Kom je dan de foutmelding `compose build requires buildx 0.17.0 or later` tegen (bekend op oudere Unraid-installaties met een verouderde `buildx`-plugin)? Zet dan `DOCKER_BUILDKIT=0` vóór het commando, of permanent in je `.env`-bestand.
 
 ## Ontwikkelmodus (zonder Docker)
 
@@ -103,10 +105,7 @@ Open **http://localhost:5173**. Vite proxyt `/api` en `/uploads` automatisch naa
 
 ## Productie
 
-`docker compose pull && docker compose up -d` haalt de kant-en-klare images op (gebouwd door GitHub Actions) en start beide containers op de achtergrond:
-
-- `frontend` — nginx serveert de gebouwde React-app op poort 3000 (te wijzigen via `FRONTEND_PORT`) en proxyt `/api` en `/uploads` naar de backend.
-- `backend` — FastAPI op poort 8000 (alleen bereikbaar binnen het Docker-netwerk).
+`docker compose pull && docker compose up -d` haalt de kant-en-klare image op (gebouwd door GitHub Actions) en start één container op de achtergrond: FastAPI serveert zowel de API (`/api/*`, `/uploads/*`) als de gebouwde React-app, op poort 3000 (te wijzigen via `FRONTEND_PORT`).
 
 Data blijft bewaard in de bind-mounts `./data` (database), `./uploads` (thumbnails) en `./backups` (automatische back-ups), ook na `docker compose down`. Gebruik `docker compose down -v` alleen als je bewust alles wilt wissen (let op: dit verwijdert geen bind-mounts, enkel eventuele named volumes).
 
@@ -173,7 +172,7 @@ Trend-data wordt maximaal elke 6 uur ververst (gecached in de database) om binne
 
 - **Backend:** FastAPI, SQLAlchemy (SQLite), JWT-authenticatie, reportlab (PDF-export), OpenAI/Anthropic SDK's + custom-endpoint support (AI-assistent), `cryptography` (Fernet-encryptie van API-sleutels), APScheduler (maandelijkse back-ups, trends-cache)
 - **Frontend:** React + Vite + TypeScript, `@dnd-kit` voor drag & drop, eigen lichtgewicht i18n-systeem (geen externe library) voor de NL/EN-taalschakelaar
-- **Infrastructuur:** Docker Compose, nginx als reverse proxy voor de frontend-container
+- **Infrastructuur:** één Docker-image (multi-stage build) waarin FastAPI ook de gebouwde frontend serveert, gebouwd en gepubliceerd door GitHub Actions
 
 ## Mapstructuur
 
@@ -181,6 +180,8 @@ Trend-data wordt maximaal elke 6 uur ververst (gecached in de database) om binne
 vlogplanner/
 ├── backend/       # FastAPI app, modellen, routers
 ├── frontend/      # React + Vite + TypeScript app
+├── .github/workflows/docker-build.yml
+├── Dockerfile
 ├── docker-compose.yml
 ├── .env.example
 └── README.md

@@ -1,8 +1,10 @@
+import os
 from contextlib import asynccontextmanager
 
 from apscheduler.schedulers.background import BackgroundScheduler
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from database import Base, engine, run_schema_upgrades, UPLOADS_DIR
@@ -73,3 +75,20 @@ app.include_router(recommendations.router, prefix="/api/recommendations", tags=[
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+
+# Serves the built frontend (frontend/dist, copied into ./static at image build
+# time) so a single container/process handles both the API and the SPA. Only
+# present in the combined Docker image; absent in local `uvicorn --reload` dev,
+# where Vite serves the frontend separately on its own port.
+STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
+if os.path.isdir(STATIC_DIR):
+
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        if full_path.startswith("api/") or full_path.startswith("uploads/"):
+            raise HTTPException(status_code=404)
+        candidate = os.path.join(STATIC_DIR, full_path)
+        if full_path and os.path.isfile(candidate):
+            return FileResponse(candidate)
+        return FileResponse(os.path.join(STATIC_DIR, "index.html"))

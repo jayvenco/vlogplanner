@@ -11,6 +11,9 @@ dist/
 frontend/vite.config.js
 frontend/vite.config.d.ts
 
+# Built frontend copied into the backend image at Docker build time
+backend/static/
+
 # Data & uploads (bind-mounted, created at runtime)
 /data/
 /uploads/
