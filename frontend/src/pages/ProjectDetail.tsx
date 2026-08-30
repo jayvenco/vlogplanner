@@ -169,7 +169,7 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
         {(["overzicht", "checklist", "storyboard", "sjabloon", "dagboek"] as Tab[]).map((tabKey) => (
           <button key={tabKey} className={tab === tabKey ? "" : "ghost"} onClick={() => setTab(tabKey)}>
             {tabKey === "overzicht" && t.projectDetail.tabOverview}
@@ -237,7 +237,7 @@ export default function ProjectDetail() {
 
       {tab === "dagboek" && (
         <div>
-          <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.5rem" }}>
+          <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
             <textarea
               placeholder={t.diary.goodPlaceholder}
               rows={2}

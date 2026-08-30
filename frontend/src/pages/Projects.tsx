@@ -41,7 +41,7 @@ export default function Projects() {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+        <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
           <input
             type="text"
             placeholder={t.projects.titlePlaceholder}

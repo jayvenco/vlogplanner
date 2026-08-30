@@ -60,7 +60,7 @@ export default function Trends() {
         <h1>{t.trends.pageTitle}</h1>
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem" }}>
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
         <button className={tab === "trending" ? "" : "ghost"} onClick={() => setTab("trending")}>
           {t.trends.tabTrending}
         </button>
@@ -71,7 +71,7 @@ export default function Trends() {
 
       {tab === "trending" && (
         <div>
-          <div className="card" style={{ marginBottom: "1.5rem", display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
+          <div className="card" style={{ marginBottom: "1rem", display: "flex", gap: "0.75rem", alignItems: "center", flexWrap: "wrap" }}>
             <label>
               {t.trends.category}{" "}
               <select value={category} onChange={(e) => setCategory(e.target.value)}>
@@ -91,7 +91,7 @@ export default function Trends() {
 
           {trends && (
             <>
-              <div className="card" style={{ marginBottom: "1.5rem" }}>
+              <div className="card" style={{ marginBottom: "1rem" }}>
                 <strong>{t.trends.trendingKeywords}</strong>
                 <div className="kanban-card-chips">
                   {trends.keywords.map((keyword) => (
@@ -121,7 +121,7 @@ export default function Trends() {
 
       {tab === "recommendation" && (
         <div>
-          <form onSubmit={handleRecommend} className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+          <form onSubmit={handleRecommend} className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
             <label>
               {t.trends.recTargetAge}{" "}
               <select value={targetAge} onChange={(e) => setTargetAge(e.target.value as TargetAge)}>

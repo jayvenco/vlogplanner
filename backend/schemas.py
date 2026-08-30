@@ -52,6 +52,7 @@ class UserOut(BaseModel):
 
 
 class UserSettingsUpdate(BaseModel):
+    username: Optional[str] = None
     llm_provider: Optional[LLMProvider] = None
     llm_api_key: Optional[str] = None
     llm_model: Optional[str] = None
@@ -60,6 +61,11 @@ class UserSettingsUpdate(BaseModel):
     youtube_client_secret: Optional[str] = None
     youtube_redirect_uri: Optional[str] = None
     youtube_api_key: Optional[str] = None
+
+
+class PasswordChangeRequest(BaseModel):
+    current_password: str
+    new_password: str
 
 
 class LLMVerifyRequest(BaseModel):

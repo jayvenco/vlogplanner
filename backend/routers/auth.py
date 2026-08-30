@@ -3,7 +3,16 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 from models import User
-from schemas import UserCreate, UserLogin, Token, UserOut, UserSettingsUpdate, LLMVerifyRequest, LLMVerifyResult
+from schemas import (
+    UserCreate,
+    UserLogin,
+    Token,
+    UserOut,
+    UserSettingsUpdate,
+    PasswordChangeRequest,
+    LLMVerifyRequest,
+    LLMVerifyResult,
+)
 from auth import hash_password, verify_password, create_access_token, get_current_user
 from crypto_utils import encrypt
 from llm_service import verify_key
@@ -54,6 +63,13 @@ def update_me(
     payload: UserSettingsUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
 ):
     data = payload.model_dump(exclude_unset=True)
+    if "username" in data:
+        new_username = (data["username"] or "").strip()
+        if not new_username:
+            raise HTTPException(status_code=400, detail="Gebruikersnaam mag niet leeg zijn")
+        if new_username != current_user.username and db.query(User).filter(User.username == new_username).first():
+            raise HTTPException(status_code=400, detail="Deze gebruikersnaam is al in gebruik")
+        current_user.username = new_username
     if "llm_provider" in data:
         current_user.llm_provider = data["llm_provider"]
     if "llm_api_key" in data:
@@ -75,6 +91,19 @@ def update_me(
     db.commit()
     db.refresh(current_user)
     return UserOut.from_user(current_user)
+
+
+@router.post("/change-password")
+def change_password(
+    payload: PasswordChangeRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    if not verify_password(payload.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Huidig wachtwoord is onjuist")
+    if len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Nieuw wachtwoord moet minstens 6 tekens zijn")
+    current_user.hashed_password = hash_password(payload.new_password)
+    db.commit()
+    return {"ok": True}
 
 
 @router.post("/llm/verify", response_model=LLMVerifyResult)

@@ -44,7 +44,7 @@ export default function Diary() {
         <h1>{t.diary.title}</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.5rem" }}>
+      <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
         <select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
           <option value="">{t.diary.noSpecificProject}</option>
           {projects.map((p) => (

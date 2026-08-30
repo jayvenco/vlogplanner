@@ -25,6 +25,16 @@ export default function Settings() {
   const [verifying, setVerifying] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
 
+  const [username, setUsername] = useState("");
+  const [savingUsername, setSavingUsername] = useState(false);
+  const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<string | null>(null);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [youtubeStatus, setYoutubeStatus] = useState<YoutubeStatus | null>(null);
   const [youtubeMessage, setYoutubeMessage] = useState<string | null>(null);
@@ -44,6 +54,7 @@ export default function Settings() {
     if (user?.llm_custom_endpoint) setCustomEndpoint(user.llm_custom_endpoint);
     if (user?.youtube_client_id) setYoutubeClientId(user.youtube_client_id);
     if (user?.youtube_redirect_uri) setYoutubeRedirectUri(user.youtube_redirect_uri);
+    if (user?.username) setUsername(user.username);
   }, [user]);
 
   function refreshYoutubeStatus() {
@@ -141,6 +152,43 @@ export default function Settings() {
     }
   }
 
+  async function handleSaveUsername() {
+    setSavingUsername(true);
+    setUsernameMessage(null);
+    try {
+      await api.put<User>("/api/auth/me", { username });
+      setUsernameMessage(t.settings.usernameSaved);
+      await refreshUser();
+    } catch (err) {
+      setUsernameMessage(err instanceof ApiError ? err.message : t.settings.usernameSaveError);
+    } finally {
+      setSavingUsername(false);
+    }
+  }
+
+  async function handleChangePassword() {
+    setPasswordMessage(null);
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage(t.settings.passwordMismatch);
+      return;
+    }
+    setSavingPassword(true);
+    try {
+      await api.post("/api/auth/change-password", {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setPasswordMessage(t.settings.passwordChanged);
+    } catch (err) {
+      setPasswordMessage(err instanceof ApiError ? err.message : t.settings.passwordSaveError);
+    } finally {
+      setSavingPassword(false);
+    }
+  }
+
   async function handleSaveKey() {
     setSaving(true);
     setMessage(null);
@@ -203,17 +251,55 @@ export default function Settings() {
         <h1>{t.settings.title}</h1>
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem" }}>
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.profileTitle}</h2>
-        <p>
-          {t.settings.username}: {user?.username}
-        </p>
         <p>
           {t.settings.email}: {user?.email}
         </p>
+        <label>
+          {t.settings.username}
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </label>
+        <div>
+          <button onClick={handleSaveUsername} disabled={savingUsername || !username.trim()}>
+            {t.settings.usernameSave}
+          </button>
+        </div>
+        {usernameMessage && <p>{usernameMessage}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem" }}>
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+        <h2>{t.settings.passwordTitle}</h2>
+        <input
+          type="password"
+          placeholder={t.settings.currentPasswordPlaceholder}
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder={t.settings.newPasswordPlaceholder}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder={t.settings.confirmPasswordPlaceholder}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <div>
+          <button
+            onClick={handleChangePassword}
+            disabled={savingPassword || !currentPassword || !newPassword || !confirmPassword}
+          >
+            {t.settings.passwordSave}
+          </button>
+        </div>
+        {passwordMessage && <p>{passwordMessage}</p>}
+      </div>
+
+      <div className="card" style={{ marginBottom: "1rem" }}>
         <h2>{t.settings.displayTitle}</h2>
         <div className="theme-picker">
           {THEME_OPTIONS.map((option) => (
@@ -229,7 +315,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem" }}>
+      <div className="card" style={{ marginBottom: "1rem" }}>
         <h2>{t.settings.languageTitle}</h2>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button className={language === "nl" ? "" : "ghost"} onClick={() => setLanguage("nl")}>
@@ -241,7 +327,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.aiTitle}</h2>
         <p>{user?.has_llm_key ? t.settings.aiKeySet : t.settings.aiKeyNotSet}</p>
 
@@ -293,7 +379,7 @@ export default function Settings() {
         {message && <p>{message}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.youtubeTitle}</h2>
         <p className="template-hint">{t.settings.youtubeOauthHint}</p>
         <input
@@ -352,7 +438,7 @@ export default function Settings() {
         {youtubeMessage && <p>{youtubeMessage}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1.5rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.youtubeApiKeyTitle}</h2>
         <p>{user?.has_youtube_api_key ? t.settings.youtubeApiKeySet : t.settings.youtubeApiKeyNotSet}</p>
         <input

@@ -232,7 +232,18 @@ export interface Translations {
     title: string;
     profileTitle: string;
     username: string;
+    usernameSave: string;
+    usernameSaved: string;
+    usernameSaveError: string;
     email: string;
+    passwordTitle: string;
+    currentPasswordPlaceholder: string;
+    newPasswordPlaceholder: string;
+    confirmPasswordPlaceholder: string;
+    passwordSave: string;
+    passwordMismatch: string;
+    passwordChanged: string;
+    passwordSaveError: string;
     displayTitle: string;
     languageTitle: string;
     dutch: string;
@@ -551,7 +562,18 @@ export const nl: Translations = {
     title: "Instellingen",
     profileTitle: "Profiel",
     username: "Gebruikersnaam",
+    usernameSave: "Opslaan",
+    usernameSaved: "Gebruikersnaam gewijzigd!",
+    usernameSaveError: "Kon gebruikersnaam niet wijzigen.",
     email: "E-mail",
+    passwordTitle: "Wachtwoord wijzigen",
+    currentPasswordPlaceholder: "Huidig wachtwoord",
+    newPasswordPlaceholder: "Nieuw wachtwoord",
+    confirmPasswordPlaceholder: "Bevestig nieuw wachtwoord",
+    passwordSave: "Wachtwoord wijzigen",
+    passwordMismatch: "Wachtwoorden komen niet overeen",
+    passwordChanged: "Wachtwoord gewijzigd!",
+    passwordSaveError: "Kon wachtwoord niet wijzigen.",
     displayTitle: "Weergave",
     languageTitle: "Taal",
     dutch: "Nederlands",
@@ -870,7 +892,18 @@ export const en: Translations = {
     title: "Settings",
     profileTitle: "Profile",
     username: "Username",
+    usernameSave: "Save",
+    usernameSaved: "Username changed!",
+    usernameSaveError: "Could not change username.",
     email: "Email",
+    passwordTitle: "Change password",
+    currentPasswordPlaceholder: "Current password",
+    newPasswordPlaceholder: "New password",
+    confirmPasswordPlaceholder: "Confirm new password",
+    passwordSave: "Change password",
+    passwordMismatch: "Passwords do not match",
+    passwordChanged: "Password changed!",
+    passwordSaveError: "Could not change password.",
     displayTitle: "Appearance",
     languageTitle: "Language",
     dutch: "Nederlands",
