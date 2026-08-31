@@ -25,6 +25,7 @@ from routers import (
     inspirations,
     trends,
     recommendations,
+    backup,
 )
 
 Base.metadata.create_all(bind=engine)
@@ -70,6 +71,7 @@ app.include_router(content_templates.router, prefix="/api/templates", tags=["tem
 app.include_router(inspirations.router, prefix="/api/inspirations", tags=["inspirations"])
 app.include_router(trends.router, prefix="/api/trends", tags=["trends"])
 app.include_router(recommendations.router, prefix="/api/recommendations", tags=["recommendations"])
+app.include_router(backup.router, prefix="/api/backup", tags=["backup"])
 
 
 @app.get("/api/health")

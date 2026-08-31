@@ -48,6 +48,9 @@ export default function Settings() {
   const [youtubeApiKey, setYoutubeApiKey] = useState("");
   const [savingYoutubeApiKey, setSavingYoutubeApiKey] = useState(false);
 
+  const [creatingBackup, setCreatingBackup] = useState(false);
+  const [backupMessage, setBackupMessage] = useState<string | null>(null);
+
   useEffect(() => {
     if (user?.llm_provider) setProvider(user.llm_provider);
     if (user?.llm_model) setModel(user.llm_model);
@@ -149,6 +152,19 @@ export default function Settings() {
       await refreshUser();
     } finally {
       setSavingYoutubeApiKey(false);
+    }
+  }
+
+  async function handleCreateBackup() {
+    setCreatingBackup(true);
+    setBackupMessage(null);
+    try {
+      await api.post("/api/backup", {});
+      setBackupMessage(t.settings.backupSuccess);
+    } catch (err) {
+      setBackupMessage(err instanceof ApiError ? err.message : t.settings.backupError);
+    } finally {
+      setCreatingBackup(false);
     }
   }
 
@@ -457,6 +473,17 @@ export default function Settings() {
             </button>
           )}
         </div>
+      </div>
+
+      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+        <h2>{t.settings.backupTitle}</h2>
+        <p className="template-hint">{t.settings.backupHint}</p>
+        <div>
+          <button onClick={handleCreateBackup} disabled={creatingBackup}>
+            {creatingBackup ? t.settings.backupCreating : t.settings.backupNow}
+          </button>
+        </div>
+        {backupMessage && <p>{backupMessage}</p>}
       </div>
 
       <button className="danger" onClick={logout}>

@@ -277,6 +277,12 @@ export interface Translations {
     youtubeApiKeyPlaceholder: string;
     youtubeApiKeySave: string;
     youtubeApiKeyRemove: string;
+    backupTitle: string;
+    backupHint: string;
+    backupNow: string;
+    backupCreating: string;
+    backupSuccess: string;
+    backupError: string;
     logout: string;
   };
   youtubeLink: {
@@ -607,6 +613,12 @@ export const nl: Translations = {
     youtubeApiKeyPlaceholder: "YouTube Data API-sleutel",
     youtubeApiKeySave: "Opslaan",
     youtubeApiKeyRemove: "Verwijderen",
+    backupTitle: "Back-ups",
+    backupHint: "Elke 1e van de maand wordt automatisch een back-up gemaakt (database + uploads), de laatste 12 worden bewaard. Je kunt hier ook op elk moment zelf een back-up maken.",
+    backupNow: "Back-up nu maken",
+    backupCreating: "Bezig met back-uppen...",
+    backupSuccess: "Back-up gemaakt!",
+    backupError: "Kon geen back-up maken.",
     logout: "Uitloggen",
   },
   youtubeLink: {
@@ -937,6 +949,12 @@ export const en: Translations = {
     youtubeApiKeyPlaceholder: "YouTube Data API key",
     youtubeApiKeySave: "Save",
     youtubeApiKeyRemove: "Remove",
+    backupTitle: "Backups",
+    backupHint: "A backup (database + uploads) is created automatically on the 1st of every month, keeping the last 12. You can also create one manually at any time.",
+    backupNow: "Create backup now",
+    backupCreating: "Creating backup...",
+    backupSuccess: "Backup created!",
+    backupError: "Could not create backup.",
     logout: "Log out",
   },
   youtubeLink: {
