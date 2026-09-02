@@ -72,7 +72,7 @@ export default function Ideas() {
         <h1>{t.ideas.pageTitle}</h1>
       </div>
 
-      <div className="card idea-filter-bar" style={{ marginBottom: "1rem", display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+      <div className="card idea-filter-bar" style={{ marginBottom: "1.25rem", display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
         <label>
           {t.ideas.filterTheme}{" "}
           <select value={themeFilter} onChange={(e) => setThemeFilter(e.target.value)}>

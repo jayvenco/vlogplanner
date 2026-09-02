@@ -42,7 +42,7 @@ export default function Dashboard() {
       {data.latest_project && (
         <>
           <h2>{t.dashboard.latestProject}</h2>
-          <div className="project-grid" style={{ marginBottom: "1rem" }}>
+          <div className="project-grid" style={{ marginBottom: "1.25rem" }}>
             <ProjectCard project={data.latest_project} />
           </div>
         </>

@@ -169,7 +169,7 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem", flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
         {(["overzicht", "checklist", "storyboard", "sjabloon", "dagboek"] as Tab[]).map((tabKey) => (
           <button key={tabKey} className={tab === tabKey ? "" : "ghost"} onClick={() => setTab(tabKey)}>
             {tabKey === "overzicht" && t.projectDetail.tabOverview}
@@ -237,7 +237,7 @@ export default function ProjectDetail() {
 
       {tab === "dagboek" && (
         <div>
-          <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
+          <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.25rem" }}>
             <textarea
               placeholder={t.diary.goodPlaceholder}
               rows={2}
@@ -253,7 +253,7 @@ export default function ProjectDetail() {
             <button onClick={handleAddDiaryEntry}>{t.diary.add}</button>
           </div>
           {diaryEntries.map((entry) => (
-            <div key={entry.id} className="card" style={{ marginBottom: "1rem" }}>
+            <div key={entry.id} className="card" style={{ marginBottom: "1.25rem" }}>
               <strong>{entry.entry_date}</strong>
               <p><span className="entry-label">{t.diary.goodLabel}:</span> {entry.wat_ging_goed || "-"}</p>
               <p><span className="entry-label">{t.diary.betterLabel}:</span> {entry.wat_kan_beter || "-"}</p>

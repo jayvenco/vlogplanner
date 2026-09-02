@@ -43,7 +43,7 @@ export default function Tasks() {
         <h1>{t.tasks.title}</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1rem", display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+      <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1.25rem", display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
         <input
           type="text"
           placeholder={t.tasks.newPlaceholder}

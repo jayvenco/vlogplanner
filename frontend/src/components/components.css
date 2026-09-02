@@ -5,8 +5,8 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
 }
 
 .page-header h1 {
@@ -29,10 +29,10 @@
   background: var(--color-primary);
   color: var(--on-primary);
   border-radius: var(--radius-lg);
-  padding: 0.85rem 1.25rem;
+  padding: 1rem 1.4rem;
   font-weight: 700;
-  font-size: 1rem;
-  margin-bottom: 1rem;
+  font-size: 1.02rem;
+  margin-bottom: 1.25rem;
   box-shadow: var(--shadow);
 }
 
@@ -445,8 +445,8 @@ button.small {
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 0.75rem;
-  margin-bottom: 1rem;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .stat-card {
@@ -467,7 +467,7 @@ button.small {
 /* Search */
 .search-bar {
   position: relative;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 .search-bar input {
@@ -501,7 +501,7 @@ button.small {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1.75rem;
 }
 
 .auth-card {
@@ -509,7 +509,7 @@ button.small {
   max-width: 380px;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.9rem;
 }
 
 .auth-card h1 {
@@ -524,12 +524,12 @@ button.small {
 }
 
 .tip-category {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
 }
 
 /* YouTube linking */
 .youtube-link {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 }
 
 .youtube-linked p {
@@ -716,14 +716,14 @@ button.small {
   box-shadow: var(--shadow);
   width: 100%;
   max-width: 640px;
-  padding: 1.25rem;
+  padding: 1.5rem;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .modal-header h2 {

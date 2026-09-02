@@ -44,7 +44,7 @@ export default function Diary() {
         <h1>{t.diary.title}</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1rem" }}>
+      <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.25rem" }}>
         <select value={projectId} onChange={(e) => setProjectId(e.target.value)}>
           <option value="">{t.diary.noSpecificProject}</option>
           {projects.map((p) => (
@@ -60,7 +60,7 @@ export default function Diary() {
 
       {entries.length === 0 && <p>{t.diary.empty}</p>}
       {entries.map((entry) => (
-        <div key={entry.id} className="card" style={{ marginBottom: "1rem" }}>
+        <div key={entry.id} className="card" style={{ marginBottom: "1.25rem" }}>
           <strong>
             {entry.entry_date}
             {projectTitle(entry.project_id) && ` · ${projectTitle(entry.project_id)}`}

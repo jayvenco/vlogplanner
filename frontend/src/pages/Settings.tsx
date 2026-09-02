@@ -267,7 +267,7 @@ export default function Settings() {
         <h1>{t.settings.title}</h1>
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.profileTitle}</h2>
         <p>
           {t.settings.email}: {user?.email}
@@ -284,7 +284,7 @@ export default function Settings() {
         {usernameMessage && <p>{usernameMessage}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.passwordTitle}</h2>
         <input
           type="password"
@@ -315,7 +315,7 @@ export default function Settings() {
         {passwordMessage && <p>{passwordMessage}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem" }}>
         <h2>{t.settings.displayTitle}</h2>
         <div className="theme-picker">
           {THEME_OPTIONS.map((option) => (
@@ -331,7 +331,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem" }}>
         <h2>{t.settings.languageTitle}</h2>
         <div style={{ display: "flex", gap: "0.5rem" }}>
           <button className={language === "nl" ? "" : "ghost"} onClick={() => setLanguage("nl")}>
@@ -343,7 +343,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.aiTitle}</h2>
         <p>{user?.has_llm_key ? t.settings.aiKeySet : t.settings.aiKeyNotSet}</p>
 
@@ -395,7 +395,7 @@ export default function Settings() {
         {message && <p>{message}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.youtubeTitle}</h2>
         <p className="template-hint">{t.settings.youtubeOauthHint}</p>
         <input
@@ -454,7 +454,7 @@ export default function Settings() {
         {youtubeMessage && <p>{youtubeMessage}</p>}
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.youtubeApiKeyTitle}</h2>
         <p>{user?.has_youtube_api_key ? t.settings.youtubeApiKeySet : t.settings.youtubeApiKeyNotSet}</p>
         <input
@@ -475,7 +475,7 @@ export default function Settings() {
         </div>
       </div>
 
-      <div className="card" style={{ marginBottom: "1rem", display: "grid", gap: "0.75rem" }}>
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.backupTitle}</h2>
         <p className="template-hint">{t.settings.backupHint}</p>
         <div>
