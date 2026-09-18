@@ -41,6 +41,7 @@ class UserOut(BaseModel):
     youtube_redirect_uri: Optional[str] = None
     has_youtube_oauth_config: bool = False
     has_youtube_api_key: bool = False
+    logo_path: Optional[str] = None
 
     @classmethod
     def from_user(cls, user) -> "UserOut":

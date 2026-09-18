@@ -1,7 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import os
+import uuid
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
-from database import get_db
+from database import LOGOS_DIR, get_db
 from models import User
 from schemas import (
     UserCreate,
@@ -18,6 +21,8 @@ from crypto_utils import encrypt
 from llm_service import verify_key
 
 router = APIRouter()
+
+ALLOWED_LOGO_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"}
 
 
 @router.post("/register", response_model=Token)
@@ -104,6 +109,42 @@ def change_password(
     current_user.hashed_password = hash_password(payload.new_password)
     db.commit()
     return {"ok": True}
+
+
+@router.post("/logo", response_model=UserOut)
+def upload_logo(
+    file: UploadFile = File(...), db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if ext not in ALLOWED_LOGO_EXTENSIONS:
+        raise HTTPException(status_code=400, detail="Alleen afbeeldingen zijn toegestaan (jpg, png, webp, gif, svg)")
+
+    if current_user.logo_path:
+        old_path = os.path.join(LOGOS_DIR, os.path.basename(current_user.logo_path))
+        if os.path.exists(old_path):
+            os.remove(old_path)
+
+    filename = f"{uuid.uuid4()}{ext}"
+    dest_path = os.path.join(LOGOS_DIR, filename)
+    with open(dest_path, "wb") as f:
+        f.write(file.file.read())
+
+    current_user.logo_path = f"/uploads/logos/{filename}"
+    db.commit()
+    db.refresh(current_user)
+    return UserOut.from_user(current_user)
+
+
+@router.delete("/logo", response_model=UserOut)
+def remove_logo(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    if current_user.logo_path:
+        old_path = os.path.join(LOGOS_DIR, os.path.basename(current_user.logo_path))
+        if os.path.exists(old_path):
+            os.remove(old_path)
+        current_user.logo_path = None
+        db.commit()
+        db.refresh(current_user)
+    return UserOut.from_user(current_user)
 
 
 @router.post("/llm/verify", response_model=LLMVerifyResult)

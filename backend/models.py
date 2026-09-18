@@ -93,6 +93,7 @@ class User(Base):
     youtube_client_secret_encrypted = Column(String, nullable=True)
     youtube_redirect_uri = Column(String, nullable=True)
     youtube_api_key_encrypted = Column(String, nullable=True)
+    logo_path = Column(String, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     projects = relationship("Project", back_populates="owner", cascade="all, delete-orphan")

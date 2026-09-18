@@ -220,6 +220,7 @@ export interface Translations {
   };
   diary: {
     title: string;
+    newEntry: string;
     noSpecificProject: string;
     goodPlaceholder: string;
     betterPlaceholder: string;
@@ -230,6 +231,10 @@ export interface Translations {
   };
   settings: {
     title: string;
+    tabAccount: string;
+    tabDisplay: string;
+    tabIntegrations: string;
+    tabSystem: string;
     profileTitle: string;
     username: string;
     usernameSave: string;
@@ -244,6 +249,11 @@ export interface Translations {
     passwordMismatch: string;
     passwordChanged: string;
     passwordSaveError: string;
+    logoTitle: string;
+    logoHint: string;
+    logoUpload: string;
+    logoUploading: string;
+    logoRemove: string;
     displayTitle: string;
     languageTitle: string;
     dutch: string;
@@ -556,6 +566,7 @@ export const nl: Translations = {
   },
   diary: {
     title: "Dagboek",
+    newEntry: "+ Nieuw dagboek",
     noSpecificProject: "Geen specifiek project",
     goodPlaceholder: "Wat ging er goed?",
     betterPlaceholder: "Wat kan er beter?",
@@ -566,6 +577,10 @@ export const nl: Translations = {
   },
   settings: {
     title: "Instellingen",
+    tabAccount: "Account",
+    tabDisplay: "Weergave",
+    tabIntegrations: "Integraties",
+    tabSystem: "Systeem",
     profileTitle: "Profiel",
     username: "Gebruikersnaam",
     usernameSave: "Opslaan",
@@ -580,6 +595,11 @@ export const nl: Translations = {
     passwordMismatch: "Wachtwoorden komen niet overeen",
     passwordChanged: "Wachtwoord gewijzigd!",
     passwordSaveError: "Kon wachtwoord niet wijzigen.",
+    logoTitle: "Logo",
+    logoHint: "Upload je eigen logo — dit vervangt het standaardlogo linksboven in het menu.",
+    logoUpload: "Logo kiezen",
+    logoUploading: "Bezig met uploaden...",
+    logoRemove: "Standaardlogo herstellen",
     displayTitle: "Weergave",
     languageTitle: "Taal",
     dutch: "Nederlands",
@@ -892,6 +912,7 @@ export const en: Translations = {
   },
   diary: {
     title: "Diary",
+    newEntry: "+ New diary entry",
     noSpecificProject: "No specific project",
     goodPlaceholder: "What went well?",
     betterPlaceholder: "What could be better?",
@@ -902,6 +923,10 @@ export const en: Translations = {
   },
   settings: {
     title: "Settings",
+    tabAccount: "Account",
+    tabDisplay: "Appearance",
+    tabIntegrations: "Integrations",
+    tabSystem: "System",
     profileTitle: "Profile",
     username: "Username",
     usernameSave: "Save",
@@ -916,6 +941,11 @@ export const en: Translations = {
     passwordMismatch: "Passwords do not match",
     passwordChanged: "Password changed!",
     passwordSaveError: "Could not change password.",
+    logoTitle: "Logo",
+    logoHint: "Upload your own logo — this replaces the default logo in the top-left of the menu.",
+    logoUpload: "Choose logo",
+    logoUploading: "Uploading...",
+    logoRemove: "Reset to default logo",
     displayTitle: "Appearance",
     languageTitle: "Language",
     dutch: "Nederlands",

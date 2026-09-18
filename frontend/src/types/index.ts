@@ -20,6 +20,7 @@ export interface User {
   youtube_redirect_uri: string | null;
   has_youtube_oauth_config: boolean;
   has_youtube_api_key: boolean;
+  logo_path: string | null;
 }
 
 export interface ChecklistItem {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
@@ -12,10 +12,14 @@ const PROVIDER_OPTIONS: { value: LLMProvider; label: string }[] = [
   { value: "custom", label: "Custom endpoint" },
 ];
 
+type SettingsTab = "account" | "weergave" | "integraties" | "systeem";
+
 export default function Settings() {
   const { user, logout, refreshUser } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const { theme, setTheme } = useTheme();
+
+  const [tab, setTab] = useState<SettingsTab>("account");
 
   const [provider, setProvider] = useState<LLMProvider>("openai");
   const [apiKey, setApiKey] = useState("");
@@ -50,6 +54,10 @@ export default function Settings() {
 
   const [creatingBackup, setCreatingBackup] = useState(false);
   const [backupMessage, setBackupMessage] = useState<string | null>(null);
+
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [logoMessage, setLogoMessage] = useState<string | null>(null);
+  const logoInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (user?.llm_provider) setProvider(user.llm_provider);
@@ -168,6 +176,35 @@ export default function Settings() {
     }
   }
 
+  async function handleUploadLogo(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingLogo(true);
+    setLogoMessage(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await api.post<User>("/api/auth/logo", formData);
+      await refreshUser();
+    } catch (err) {
+      setLogoMessage(err instanceof ApiError ? err.message : "Uploaden is mislukt");
+    } finally {
+      setUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = "";
+    }
+  }
+
+  async function handleRemoveLogo() {
+    setUploadingLogo(true);
+    setLogoMessage(null);
+    try {
+      await api.delete<User>("/api/auth/logo");
+      await refreshUser();
+    } finally {
+      setUploadingLogo(false);
+    }
+  }
+
   async function handleSaveUsername() {
     setSavingUsername(true);
     setUsernameMessage(null);
@@ -267,6 +304,19 @@ export default function Settings() {
         <h1>{t.settings.title}</h1>
       </div>
 
+      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem", flexWrap: "wrap" }}>
+        {(["account", "weergave", "integraties", "systeem"] as SettingsTab[]).map((tabKey) => (
+          <button key={tabKey} className={tab === tabKey ? "" : "ghost"} onClick={() => setTab(tabKey)}>
+            {tabKey === "account" && t.settings.tabAccount}
+            {tabKey === "weergave" && t.settings.tabDisplay}
+            {tabKey === "integraties" && t.settings.tabIntegrations}
+            {tabKey === "systeem" && t.settings.tabSystem}
+          </button>
+        ))}
+      </div>
+
+      {tab === "account" && (
+      <>
       <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.profileTitle}</h2>
         <p>
@@ -315,6 +365,34 @@ export default function Settings() {
         {passwordMessage && <p>{passwordMessage}</p>}
       </div>
 
+      <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
+        <h2>{t.settings.logoTitle}</h2>
+        <p className="template-hint">{t.settings.logoHint}</p>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <img src={user?.logo_path || "/logo-icon.png"} alt="" style={{ width: 40, height: 40, objectFit: "contain" }} />
+          <input
+            ref={logoInputRef}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={handleUploadLogo}
+          />
+          <button className="secondary" onClick={() => logoInputRef.current?.click()} disabled={uploadingLogo}>
+            {uploadingLogo ? t.settings.logoUploading : t.settings.logoUpload}
+          </button>
+          {user?.logo_path && (
+            <button className="ghost" onClick={handleRemoveLogo} disabled={uploadingLogo}>
+              {t.settings.logoRemove}
+            </button>
+          )}
+        </div>
+        {logoMessage && <p className="error-text">{logoMessage}</p>}
+      </div>
+      </>
+      )}
+
+      {tab === "weergave" && (
+      <>
       <div className="card" style={{ marginBottom: "1.25rem" }}>
         <h2>{t.settings.displayTitle}</h2>
         <div className="theme-picker">
@@ -342,7 +420,11 @@ export default function Settings() {
           </button>
         </div>
       </div>
+      </>
+      )}
 
+      {tab === "integraties" && (
+      <>
       <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.aiTitle}</h2>
         <p>{user?.has_llm_key ? t.settings.aiKeySet : t.settings.aiKeyNotSet}</p>
@@ -474,7 +556,10 @@ export default function Settings() {
           )}
         </div>
       </div>
+      </>
+      )}
 
+      {tab === "systeem" && (
       <div className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
         <h2>{t.settings.backupTitle}</h2>
         <p className="template-hint">{t.settings.backupHint}</p>
@@ -485,6 +570,7 @@ export default function Settings() {
         </div>
         {backupMessage && <p>{backupMessage}</p>}
       </div>
+      )}
 
       <button className="danger" onClick={logout}>
         {t.settings.logout}

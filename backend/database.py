@@ -12,6 +12,9 @@ os.makedirs(THUMBNAILS_DIR, exist_ok=True)
 INSPIRATIONS_DIR = os.path.join(UPLOADS_DIR, "inspirations")
 os.makedirs(INSPIRATIONS_DIR, exist_ok=True)
 
+LOGOS_DIR = os.path.join(UPLOADS_DIR, "logos")
+os.makedirs(LOGOS_DIR, exist_ok=True)
+
 BACKUPS_DIR = os.environ.get("BACKUPS_DIR", os.path.join(os.path.dirname(__file__), "backups"))
 os.makedirs(BACKUPS_DIR, exist_ok=True)
 
@@ -54,6 +57,7 @@ SCHEMA_UPGRADE_STATEMENTS = [
     "ALTER TABLE users ADD COLUMN youtube_client_secret_encrypted VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_redirect_uri VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_api_key_encrypted VARCHAR",
+    "ALTER TABLE users ADD COLUMN logo_path VARCHAR",
 ]
 
 
