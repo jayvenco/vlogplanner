@@ -445,6 +445,18 @@
   opacity: 0.45;
 }
 
+/* Shared file-upload button (thumbnail, logo, inspiration image) */
+.file-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+}
+
+.file-upload .error-text {
+  margin: 0;
+}
+
 /* Thumbnail upload */
 .thumbnail-upload {
   display: flex;

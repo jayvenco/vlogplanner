@@ -1,5 +1,6 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "../api/client";
+import FileUploadButton from "../components/FileUploadButton";
 import { useLanguage } from "../context/LanguageContext";
 import type { Inspiration, InspirationType } from "../types";
 
@@ -12,7 +13,6 @@ export default function Inspirations() {
   const [tagFilter, setTagFilter] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   function refresh(tag?: string) {
     const query = tag ? `?tag=${encodeURIComponent(tag)}` : "";
@@ -25,7 +25,6 @@ export default function Inspirations() {
     setContent("");
     setTags("");
     setImageFile(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -84,16 +83,10 @@ export default function Inspirations() {
         </select>
         {type === "image" ? (
           <>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+            <FileUploadButton
+              label={imageFile ? imageFile.name : t.inspiration.uploadImage}
+              onFile={(file) => setImageFile(file)}
             />
-            <button type="button" className="secondary" onClick={() => fileInputRef.current?.click()}>
-              {imageFile ? imageFile.name : t.inspiration.uploadImage}
-            </button>
             <input
               type="text"
               placeholder={t.inspiration.imageCaptionPlaceholder}

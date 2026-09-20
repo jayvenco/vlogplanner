@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
-import { getToken } from "../api/client";
+import { api } from "../api/client";
 import { useLanguage } from "../context/LanguageContext";
+import FileUploadButton from "./FileUploadButton";
 
 interface Props {
   projectId: number;
@@ -10,34 +10,12 @@ interface Props {
 
 export default function ThumbnailUpload({ projectId, thumbnailPath, onUploaded }: Props) {
   const { t } = useLanguage();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploading, setUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
-    setError(null);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(`/api/projects/${projectId}/thumbnail`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${getToken()}` },
-        body: formData,
-      });
-      if (!response.ok) {
-        const data = await response.json().catch(() => ({}));
-        throw new Error(data.detail || "Uploaden is mislukt");
-      }
-      const data = await response.json();
-      onUploaded(data.thumbnail_path);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Uploaden is mislukt");
-    } finally {
-      setUploading(false);
-    }
+  async function handleFile(file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    const data = await api.post<{ thumbnail_path: string }>(`/api/projects/${projectId}/thumbnail`, formData);
+    onUploaded(data.thumbnail_path);
   }
 
   return (
@@ -47,11 +25,7 @@ export default function ThumbnailUpload({ projectId, thumbnailPath, onUploaded }
       ) : (
         <div className="thumbnail-preview thumbnail-placeholder" />
       )}
-      <input ref={fileInputRef} type="file" accept="image/*" hidden onChange={handleFileChange} />
-      <button className="secondary" onClick={() => fileInputRef.current?.click()} disabled={uploading}>
-        {uploading ? t.thumbnail.uploading : t.thumbnail.choose}
-      </button>
-      {error && <p className="error-text">{error}</p>}
+      <FileUploadButton label={t.thumbnail.choose} busyLabel={t.thumbnail.uploading} onFile={handleFile} />
     </div>
   );
 }
