@@ -5,7 +5,6 @@ import { useLanguage } from "../context/LanguageContext";
 import type {
   ChecklistItem,
   ChecklistSection as ChecklistSectionType,
-  DiaryEntry,
   ProjectDetail as ProjectDetailType,
   ProjectTemplate,
   ProjectTip,
@@ -18,6 +17,7 @@ import ChecklistSection from "../components/ChecklistSection";
 import StoryboardEditor from "../components/StoryboardEditor";
 import TemplateEditor from "../components/TemplateEditor";
 import YoutubeLink from "../components/YoutubeLink";
+import DiarySection from "../components/DiarySection";
 import { useDebouncedCallback } from "../hooks/useDebouncedCallback";
 
 type Tab = "overzicht" | "checklist" | "storyboard" | "sjabloon" | "dagboek";
@@ -30,9 +30,6 @@ export default function ProjectDetail() {
   const [tab, setTab] = useState<Tab>("overzicht");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [diaryEntries, setDiaryEntries] = useState<DiaryEntry[]>([]);
-  const [diaryGoed, setDiaryGoed] = useState("");
-  const [diaryBeter, setDiaryBeter] = useState("");
   const [template, setTemplate] = useState<ProjectTemplate | null>(null);
   const [tips, setTips] = useState<ProjectTip[]>([]);
 
@@ -47,9 +44,6 @@ export default function ProjectDetail() {
   useEffect(load, [load]);
 
   useEffect(() => {
-    if (tab === "dagboek") {
-      api.get<DiaryEntry[]>(`/api/diary?project_id=${id}`).then(setDiaryEntries);
-    }
     if (tab === "sjabloon") {
       api.get<ProjectTemplate>(`/api/projects/${id}/template`).then(setTemplate);
       api.get<ProjectTip[]>(`/api/projects/${id}/tips`).then(setTips);
@@ -125,19 +119,6 @@ export default function ProjectDetail() {
     } catch (err) {
       throw new Error(err instanceof ApiError ? err.message : t.projectTemplate.askAiError);
     }
-  }
-
-  async function handleAddDiaryEntry() {
-    if (!diaryGoed.trim() && !diaryBeter.trim()) return;
-    await api.post("/api/diary", {
-      project_id: Number(id),
-      wat_ging_goed: diaryGoed,
-      wat_kan_beter: diaryBeter,
-    });
-    setDiaryGoed("");
-    setDiaryBeter("");
-    const entries = await api.get<DiaryEntry[]>(`/api/diary?project_id=${id}`);
-    setDiaryEntries(entries);
   }
 
   async function handleExportPdf() {
@@ -235,32 +216,7 @@ export default function ProjectDetail() {
           <p>{t.common.loading}</p>
         ))}
 
-      {tab === "dagboek" && (
-        <div>
-          <div className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.25rem" }}>
-            <textarea
-              placeholder={t.diary.goodPlaceholder}
-              rows={2}
-              value={diaryGoed}
-              onChange={(e) => setDiaryGoed(e.target.value)}
-            />
-            <textarea
-              placeholder={t.diary.betterPlaceholder}
-              rows={2}
-              value={diaryBeter}
-              onChange={(e) => setDiaryBeter(e.target.value)}
-            />
-            <button onClick={handleAddDiaryEntry}>{t.diary.add}</button>
-          </div>
-          {diaryEntries.map((entry) => (
-            <div key={entry.id} className="card" style={{ marginBottom: "1.25rem" }}>
-              <strong>{entry.entry_date}</strong>
-              <p><span className="entry-label">{t.diary.goodLabel}:</span> {entry.wat_ging_goed || "-"}</p>
-              <p><span className="entry-label">{t.diary.betterLabel}:</span> {entry.wat_kan_beter || "-"}</p>
-            </div>
-          ))}
-        </div>
-      )}
+      {tab === "dagboek" && <DiarySection projectId={Number(id)} />}
     </div>
   );
 }
