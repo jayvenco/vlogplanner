@@ -41,6 +41,9 @@ export interface Translations {
     diary: string;
     settings: string;
     logout: string;
+    groupWork: string;
+    groupPlan: string;
+    groupTrack: string;
   };
   dashboard: {
     title: string;
@@ -362,6 +365,9 @@ export const nl: Translations = {
     diary: "Dagboek",
     settings: "Instellingen",
     logout: "Uitloggen",
+    groupWork: "Werken",
+    groupPlan: "Plannen",
+    groupTrack: "Bijhouden",
   },
   dashboard: {
     title: "Dashboard",
@@ -708,6 +714,9 @@ export const en: Translations = {
     diary: "Diary",
     settings: "Settings",
     logout: "Log out",
+    groupWork: "Work",
+    groupPlan: "Plan",
+    groupTrack: "Track",
   },
   dashboard: {
     title: "Dashboard",
