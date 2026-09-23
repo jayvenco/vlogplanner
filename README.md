@@ -51,6 +51,8 @@ cp .env.example .env
 
 Zonder `.env`-bestand werkt de app ook prima met veilige standaardwaarden voor lokaal gebruik.
 
+**`ENCRYPTION_KEY` (optioneel, aanbevolen):** aparte sleutel waarmee opgeslagen API-sleutels (AI-assistent, YouTube) versleuteld worden. Zonder deze variabele wordt daarvoor `JWT_SECRET_KEY` hergebruikt, zoals voorheen. Zet je 'm later alsnog in een bestaande installatie, dan worden al opgeslagen API-sleutels onleesbaar — vul ze dan opnieuw in via Instellingen. Eenmaal gezet: nooit meer wijzigen.
+
 ### Updaten
 
 ```bash
@@ -80,7 +82,7 @@ Poort 7766 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poor
 
 Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
 
-**Liever plain `docker run` in plaats van `docker compose`?** Gebruik `install-docker-run.sh` (eenmalig, maakt `/mnt/user/appdata/vlogplanner/{data,uploads,backups}` aan met de juiste rechten en een `.env` met een willekeurige JWT-sleutel) en daarna `update-docker-run.sh` om te updaten — beide staan in de root van deze repo en raken je data nooit aan.
+**Liever plain `docker run` in plaats van `docker compose`?** Gebruik `install-docker-run.sh` (eenmalig, maakt `/mnt/user/appdata/vlogplanner/{data,uploads,backups}` aan met de juiste rechten en een `.env` met willekeurige JWT- en encryptiesleutels) en daarna `update-docker-run.sh` om te updaten — beide staan in de root van deze repo en raken je data nooit aan.
 
 **Zelf bouwen in plaats van de kant-en-klare image pullen?** Vervang in `docker-compose.yml` de `image:`-regel tijdelijk door `build: .` en draai `docker compose up --build -d`. Kom je dan de foutmelding `compose build requires buildx 0.17.0 or later` tegen (bekend op oudere Unraid-installaties met een verouderde `buildx`-plugin)? Zet dan `DOCKER_BUILDKIT=0` vóór het commando, of permanent in je `.env`-bestand.
 

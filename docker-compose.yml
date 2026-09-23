@@ -3,6 +3,7 @@ services:
     image: ghcr.io/jayvenco/vlogplanner:latest
     environment:
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-please-change-this-secret-in-your-env-file}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-}
       - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}
       - YOUTUBE_CLIENT_ID=${YOUTUBE_CLIENT_ID:-}
       - YOUTUBE_CLIENT_SECRET=${YOUTUBE_CLIENT_SECRET:-}

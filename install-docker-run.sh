@@ -22,10 +22,12 @@ chmod 755 "$APP_DIR"
 chmod -R 777 "$APP_DIR/data" "$APP_DIR/uploads" "$APP_DIR/backups"
 
 if [ ! -f "$APP_DIR/.env" ]; then
-  echo "==> .env aanmaken met een willekeurig gegenereerde JWT-sleutel"
+  echo "==> .env aanmaken met willekeurig gegenereerde sleutels"
   RANDOM_SECRET=$(head -c 32 /dev/urandom | base64 | tr -d '\n')
+  RANDOM_ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64 | tr -d '\n')
   cat > "$APP_DIR/.env" <<EOF
 JWT_SECRET_KEY=$RANDOM_SECRET
+ENCRYPTION_KEY=$RANDOM_ENCRYPTION_KEY
 ACCESS_TOKEN_EXPIRE_MINUTES=10080
 FRONTEND_PORT=7766
 YOUTUBE_CLIENT_ID=
@@ -43,6 +45,7 @@ source "$APP_DIR/.env"
 set +a
 
 JWT_SECRET_KEY="${JWT_SECRET_KEY:-please-change-this-secret-in-your-env-file}"
+ENCRYPTION_KEY="${ENCRYPTION_KEY:-}"
 ACCESS_TOKEN_EXPIRE_MINUTES="${ACCESS_TOKEN_EXPIRE_MINUTES:-10080}"
 FRONTEND_PORT="${FRONTEND_PORT:-7766}"
 YOUTUBE_CLIENT_ID="${YOUTUBE_CLIENT_ID:-}"
@@ -75,6 +78,7 @@ docker run -d \
   -v "$APP_DIR/uploads:/app/uploads" \
   -v "$APP_DIR/backups:/app/backups" \
   -e JWT_SECRET_KEY="$JWT_SECRET_KEY" \
+  -e ENCRYPTION_KEY="$ENCRYPTION_KEY" \
   -e ACCESS_TOKEN_EXPIRE_MINUTES="$ACCESS_TOKEN_EXPIRE_MINUTES" \
   -e YOUTUBE_CLIENT_ID="$YOUTUBE_CLIENT_ID" \
   -e YOUTUBE_CLIENT_SECRET="$YOUTUBE_CLIENT_SECRET" \
@@ -85,4 +89,4 @@ docker run -d \
 echo ""
 echo "Installatie voltooid!"
 echo "Open de app op http://<dit-ip>:${FRONTEND_PORT} en registreer een account."
-echo "Instellingen (JWT-sleutel, poort, YouTube-vars) staan in $APP_DIR/.env"
+echo "Instellingen (JWT-sleutel, encryptiesleutel, poort, YouTube-vars) staan in $APP_DIR/.env"
