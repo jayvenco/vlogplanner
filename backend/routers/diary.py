@@ -7,15 +7,13 @@ from database import get_db
 from models import DiaryEntry, Project, User
 from schemas import DiaryEntryOut, DiaryEntryCreate, DiaryEntryUpdate
 from auth import get_current_user
+from ownership import get_owned
 
 router = APIRouter()
 
 
 def _get_owned_entry(db: Session, entry_id: int, current_user: User) -> DiaryEntry:
-    entry = db.query(DiaryEntry).filter(DiaryEntry.id == entry_id, DiaryEntry.user_id == current_user.id).first()
-    if not entry:
-        raise HTTPException(status_code=404, detail="Dagboek-item niet gevonden")
-    return entry
+    return get_owned(db, DiaryEntry, entry_id, current_user, "Dagboek-item niet gevonden")
 
 
 @router.get("", response_model=list[DiaryEntryOut])

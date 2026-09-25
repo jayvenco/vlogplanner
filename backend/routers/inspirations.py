@@ -9,6 +9,7 @@ from database import INSPIRATIONS_DIR, get_db
 from models import Inspiration, InspirationType, User
 from schemas import InspirationCreate, InspirationUpdate, InspirationOut
 from auth import get_current_user
+from ownership import get_owned
 
 router = APIRouter()
 
@@ -16,14 +17,7 @@ ALLOWED_INSPIRATION_IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"
 
 
 def _get_owned_inspiration(db: Session, inspiration_id: int, current_user: User) -> Inspiration:
-    inspiration = (
-        db.query(Inspiration)
-        .filter(Inspiration.id == inspiration_id, Inspiration.user_id == current_user.id)
-        .first()
-    )
-    if not inspiration:
-        raise HTTPException(status_code=404, detail="Inspiratie niet gevonden")
-    return inspiration
+    return get_owned(db, Inspiration, inspiration_id, current_user, "Inspiratie niet gevonden")
 
 
 @router.get("", response_model=list[InspirationOut])

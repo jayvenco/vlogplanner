@@ -11,6 +11,7 @@ from schemas import ProjectCreate, ProjectUpdate, ProjectOut, ProjectDetailOut, 
 from auth import get_current_user
 from badges import check_and_award_badges
 from constants import DEFAULT_CHECKLIST_ITEMS, DEFAULT_STORYBOARD_BLOCKS
+from ownership import get_owned
 from pdf_export import generate_project_pdf
 import youtube_service as yt
 from youtube_service import YoutubeNotConfiguredError, YoutubeNotConnectedError, YoutubeApiError
@@ -34,10 +35,7 @@ def project_to_out(project: Project) -> ProjectOut:
 
 
 def get_owned_project(db: Session, project_id: int, user: User) -> Project:
-    project = db.query(Project).filter(Project.id == project_id, Project.user_id == user.id).first()
-    if not project:
-        raise HTTPException(status_code=404, detail="Project niet gevonden")
-    return project
+    return get_owned(db, Project, project_id, user, "Project niet gevonden")
 
 
 @router.get("", response_model=list[ProjectOut])

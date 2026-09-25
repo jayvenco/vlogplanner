@@ -11,6 +11,7 @@ from auth import get_current_user
 from badges import check_and_award_badges
 from constants import CONTENT_TEMPLATES_BY_KEY, AGE_GROUP_GUIDANCE
 from llm_service import generate, NoApiKeyError, LLMRequestError
+from ownership import get_owned
 
 router = APIRouter()
 
@@ -23,10 +24,7 @@ IDEA_SYSTEM_PROMPT = (
 
 
 def _get_owned_idea(db: Session, idea_id: int, current_user: User) -> IdeaCard:
-    idea = db.query(IdeaCard).filter(IdeaCard.id == idea_id, IdeaCard.user_id == current_user.id).first()
-    if not idea:
-        raise HTTPException(status_code=404, detail="Idee niet gevonden")
-    return idea
+    return get_owned(db, IdeaCard, idea_id, current_user, "Idee niet gevonden")
 
 
 @router.get("", response_model=list[IdeaCardOut])

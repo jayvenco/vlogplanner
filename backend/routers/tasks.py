@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from database import get_db
@@ -6,15 +6,13 @@ from models import Task, User
 from schemas import TaskOut, TaskCreate, TaskUpdate
 from auth import get_current_user
 from badges import check_and_award_badges
+from ownership import get_owned
 
 router = APIRouter()
 
 
 def _get_owned_task(db: Session, task_id: int, current_user: User) -> Task:
-    task = db.query(Task).filter(Task.id == task_id, Task.user_id == current_user.id).first()
-    if not task:
-        raise HTTPException(status_code=404, detail="Taak niet gevonden")
-    return task
+    return get_owned(db, Task, task_id, current_user, "Taak niet gevonden")
 
 
 @router.get("", response_model=list[TaskOut])
