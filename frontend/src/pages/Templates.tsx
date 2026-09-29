@@ -18,7 +18,7 @@ export default function Templates() {
       </div>
 
       {templates.map((tpl) => (
-        <div key={tpl.key} className="card template-library-card" style={{ marginBottom: "1.25rem" }}>
+        <div key={tpl.key} className="card card-spaced template-library-card">
           <h2>
             {tpl.name}
           </h2>

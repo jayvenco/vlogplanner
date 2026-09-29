@@ -307,6 +307,14 @@ textarea:focus {
   padding: 1.5rem;
 }
 
+/* Vertical gap between stacked page sections (cards, forms) — use instead
+   of a repeated inline style={{ marginBottom: "1.25rem" }}. Not baked into
+   .card itself: some cards sit inside a grid/flex parent that already
+   supplies its own gap, and adding margin there would double the spacing. */
+.card-spaced {
+  margin-bottom: 1.25rem;
+}
+
 a {
   color: var(--color-primary);
   text-decoration: none;

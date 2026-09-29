@@ -55,7 +55,7 @@ export default function ChecklistPage() {
         <p>{t.checklist.emptyNoProjects}</p>
       ) : (
         <>
-          <div className="card" style={{ marginBottom: "1.25rem" }}>
+          <div className="card card-spaced">
             <label>
               {t.checklist.chooseProject}{" "}
               <select value={selectedId ?? ""} onChange={(e) => setSelectedId(Number(e.target.value))}>

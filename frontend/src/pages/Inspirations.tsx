@@ -74,7 +74,7 @@ export default function Inspirations() {
         <h1>{t.inspiration.pageTitle}</h1>
       </div>
 
-      <form onSubmit={handleSubmit} className="card" style={{ marginBottom: "1.25rem", display: "grid", gap: "0.75rem" }}>
+      <form onSubmit={handleSubmit} className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>
         <select value={type} onChange={(e) => setType(e.target.value as InspirationType)}>
           <option value="link">{t.inspiration.typeLink}</option>
           <option value="screenshot_note">{t.inspiration.typeScreenshot}</option>
@@ -113,7 +113,7 @@ export default function Inspirations() {
         </button>
       </form>
 
-      <div className="card" style={{ marginBottom: "1.25rem" }}>
+      <div className="card card-spaced">
         <label>
           {t.inspiration.filterByTag}{" "}
           <input type="text" value={tagFilter} onChange={(e) => handleFilterChange(e.target.value)} />
@@ -122,7 +122,7 @@ export default function Inspirations() {
 
       {items.length === 0 && <p>{t.inspiration.empty}</p>}
       {items.map((item) => (
-        <div key={item.id} className="card" style={{ marginBottom: "1.25rem" }}>
+        <div key={item.id} className="card card-spaced">
           <div className="page-header" style={{ marginBottom: "0.5rem" }}>
             <div>
               <span className="chip" style={{ marginRight: "0.6rem" }}>{typeLabel[item.type]}</span>

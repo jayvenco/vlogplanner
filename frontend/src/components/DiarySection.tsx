@@ -53,7 +53,7 @@ export default function DiarySection({ projectId }: Props) {
       )}
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="card" style={{ display: "grid", gap: "0.75rem", marginBottom: "1.25rem" }}>
+        <form onSubmit={handleSubmit} className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>
           {!projectId && (
             <select value={selectedProjectId} onChange={(e) => setSelectedProjectId(e.target.value)}>
               <option value="">{t.diary.noSpecificProject}</option>
