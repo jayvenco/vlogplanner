@@ -19,12 +19,10 @@ from models import (
 class UserCreate(BaseModel):
     username: str
     email: EmailStr
-    password: str
 
 
 class UserLogin(BaseModel):
     username: str
-    password: str
 
 
 class UserOut(BaseModel):
@@ -62,11 +60,6 @@ class UserSettingsUpdate(BaseModel):
     youtube_client_secret: Optional[str] = None
     youtube_redirect_uri: Optional[str] = None
     youtube_api_key: Optional[str] = None
-
-
-class PasswordChangeRequest(BaseModel):
-    current_password: str
-    new_password: str
 
 
 class LLMVerifyRequest(BaseModel):

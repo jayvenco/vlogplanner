@@ -9,7 +9,6 @@ export default function Login() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +17,7 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      await login(username, password);
+      await login(username);
       navigate("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t.auth.loginFailed);
@@ -37,13 +36,6 @@ export default function Login() {
             placeholder={t.auth.username}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder={t.auth.password}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
             required
           />
           {error && <p className="error-text">{error}</p>}

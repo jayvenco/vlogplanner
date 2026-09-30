@@ -10,7 +10,6 @@ export default function Register() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -19,7 +18,7 @@ export default function Register() {
     setError(null);
     setLoading(true);
     try {
-      await register(username, email, password);
+      await register(username, email);
       navigate("/");
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t.auth.registerFailed);
@@ -45,14 +44,6 @@ export default function Register() {
             placeholder={t.auth.email}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <input
-            type="password"
-            placeholder={t.auth.password}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
             required
           />
           {error && <p className="error-text">{error}</p>}

@@ -1,4 +1,5 @@
 import os
+import secrets
 import uuid
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
@@ -12,11 +13,10 @@ from schemas import (
     Token,
     UserOut,
     UserSettingsUpdate,
-    PasswordChangeRequest,
     LLMVerifyRequest,
     LLMVerifyResult,
 )
-from auth import hash_password, verify_password, create_access_token, get_current_user
+from auth import hash_password, create_access_token, get_current_user
 from crypto_utils import encrypt
 from llm_service import verify_key
 
@@ -35,7 +35,9 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     user = User(
         username=payload.username,
         email=payload.email,
-        hashed_password=hash_password(payload.password),
+        # No password collected for now: store an internal random hash so the
+        # column stays populated, but it is never issued to or checked against the user.
+        hashed_password=hash_password(secrets.token_urlsafe(32)),
     )
     db.add(user)
     db.commit()
@@ -48,10 +50,10 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
 @router.post("/login", response_model=Token)
 def login(payload: UserLogin, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == payload.username).first()
-    if not user or not verify_password(payload.password, user.hashed_password):
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Gebruikersnaam of wachtwoord is onjuist",
+            detail="Gebruikersnaam bestaat niet",
         )
 
     token = create_access_token(user.id)
@@ -96,19 +98,6 @@ def update_me(
     db.commit()
     db.refresh(current_user)
     return UserOut.from_user(current_user)
-
-
-@router.post("/change-password")
-def change_password(
-    payload: PasswordChangeRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
-):
-    if not verify_password(payload.current_password, current_user.hashed_password):
-        raise HTTPException(status_code=400, detail="Huidig wachtwoord is onjuist")
-    if len(payload.new_password) < 6:
-        raise HTTPException(status_code=400, detail="Nieuw wachtwoord moet minstens 6 tekens zijn")
-    current_user.hashed_password = hash_password(payload.new_password)
-    db.commit()
-    return {"ok": True}
 
 
 @router.post("/logo", response_model=UserOut)

@@ -15,7 +15,6 @@ export interface Translations {
     registerTitle: string;
     username: string;
     email: string;
-    password: string;
     login: string;
     loggingIn: string;
     createAccount: string;
@@ -244,14 +243,6 @@ export interface Translations {
     usernameSaved: string;
     usernameSaveError: string;
     email: string;
-    passwordTitle: string;
-    currentPasswordPlaceholder: string;
-    newPasswordPlaceholder: string;
-    confirmPasswordPlaceholder: string;
-    passwordSave: string;
-    passwordMismatch: string;
-    passwordChanged: string;
-    passwordSaveError: string;
     logoTitle: string;
     logoHint: string;
     logoUpload: string;
@@ -339,7 +330,6 @@ export const nl: Translations = {
     registerTitle: "Welkom!",
     username: "Gebruikersnaam",
     email: "E-mailadres",
-    password: "Wachtwoord",
     login: "Inloggen",
     loggingIn: "Bezig...",
     createAccount: "Account aanmaken",
@@ -593,14 +583,6 @@ export const nl: Translations = {
     usernameSaved: "Gebruikersnaam gewijzigd!",
     usernameSaveError: "Kon gebruikersnaam niet wijzigen.",
     email: "E-mail",
-    passwordTitle: "Wachtwoord wijzigen",
-    currentPasswordPlaceholder: "Huidig wachtwoord",
-    newPasswordPlaceholder: "Nieuw wachtwoord",
-    confirmPasswordPlaceholder: "Bevestig nieuw wachtwoord",
-    passwordSave: "Wachtwoord wijzigen",
-    passwordMismatch: "Wachtwoorden komen niet overeen",
-    passwordChanged: "Wachtwoord gewijzigd!",
-    passwordSaveError: "Kon wachtwoord niet wijzigen.",
     logoTitle: "Logo",
     logoHint: "Upload je eigen logo — dit vervangt het standaardlogo linksboven in het menu.",
     logoUpload: "Logo kiezen",
@@ -688,7 +670,6 @@ export const en: Translations = {
     registerTitle: "Welcome!",
     username: "Username",
     email: "Email address",
-    password: "Password",
     login: "Log in",
     loggingIn: "Working...",
     createAccount: "Create account",
@@ -942,14 +923,6 @@ export const en: Translations = {
     usernameSaved: "Username changed!",
     usernameSaveError: "Could not change username.",
     email: "Email",
-    passwordTitle: "Change password",
-    currentPasswordPlaceholder: "Current password",
-    newPasswordPlaceholder: "New password",
-    confirmPasswordPlaceholder: "Confirm new password",
-    passwordSave: "Change password",
-    passwordMismatch: "Passwords do not match",
-    passwordChanged: "Password changed!",
-    passwordSaveError: "Could not change password.",
     logoTitle: "Logo",
     logoHint: "Upload your own logo — this replaces the default logo in the top-left of the menu.",
     logoUpload: "Choose logo",

@@ -34,12 +34,6 @@ export default function Settings() {
   const [savingUsername, setSavingUsername] = useState(false);
   const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
 
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [savingPassword, setSavingPassword] = useState(false);
-  const [passwordMessage, setPasswordMessage] = useState<string | null>(null);
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [youtubeStatus, setYoutubeStatus] = useState<YoutubeStatus | null>(null);
   const [youtubeMessage, setYoutubeMessage] = useState<string | null>(null);
@@ -206,29 +200,6 @@ export default function Settings() {
     }
   }
 
-  async function handleChangePassword() {
-    setPasswordMessage(null);
-    if (newPassword !== confirmPassword) {
-      setPasswordMessage(t.settings.passwordMismatch);
-      return;
-    }
-    setSavingPassword(true);
-    try {
-      await api.post("/api/auth/change-password", {
-        current_password: currentPassword,
-        new_password: newPassword,
-      });
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setPasswordMessage(t.settings.passwordChanged);
-    } catch (err) {
-      setPasswordMessage(err instanceof ApiError ? err.message : t.settings.passwordSaveError);
-    } finally {
-      setSavingPassword(false);
-    }
-  }
-
   async function handleSaveKey() {
     setSaving(true);
     setMessage(null);
@@ -319,37 +290,6 @@ export default function Settings() {
           </button>
         </div>
         {usernameMessage && <p>{usernameMessage}</p>}
-      </div>
-
-      <div className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>
-        <h2>{t.settings.passwordTitle}</h2>
-        <input
-          type="password"
-          placeholder={t.settings.currentPasswordPlaceholder}
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder={t.settings.newPasswordPlaceholder}
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder={t.settings.confirmPasswordPlaceholder}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-        />
-        <div>
-          <button
-            onClick={handleChangePassword}
-            disabled={savingPassword || !currentPassword || !newPassword || !confirmPassword}
-          >
-            {t.settings.passwordSave}
-          </button>
-        </div>
-        {passwordMessage && <p>{passwordMessage}</p>}
       </div>
 
       <div className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>
