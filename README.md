@@ -66,7 +66,22 @@ docker compose up -d
 
 ### Installeren op Unraid
 
-Snelste route: via de Unraid-terminal, zonder extra plugins nodig (Unraid 6.12+ heeft `docker compose` al ingebouwd).
+**Aanbevolen: één commando.** Draai dit in de Unraid-terminal. De container verschijnt daarna in de **Docker-tab** met icoon en WebUI-link, en is te beheren met **Edit**, **Check for Updates** en **Apply Update**:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jayvenco/vlogplanner/main/scripts/install-unraid.sh | bash
+```
+
+Het script (`scripts/install-unraid.sh`) maakt de mappen aan onder `/mnt/user/appdata/vlogplanner/{data,uploads,backups}`, genereert eenmalig de geheime sleutels (opgeslagen in `/mnt/user/appdata/vlogplanner/secret_key`, rechten 600), haalt de image op, start de container met de juiste Unraid-labels en bewaart het template als `my-vlogplanner.xml`. Daarna wacht het op de Docker-healthcheck en toont de URL, standaard `http://<unraid-ip>:7766`.
+
+- **Opnieuw draaien is veilig.** Bestaande data en sleutels blijven staan; een bestaande installatie (inclusief een `.env` van `install-docker-run.sh`) wordt overgenomen, dus je logins en opgeslagen API-sleutels blijven werken.
+- **Aanpassen** met omgevingsvariabelen achter de pipe, bijvoorbeeld `curl -fsSL ... | PORT=8080 bash`. Beschikbaar: `PORT`, `APPDATA`, `IMAGE_TAG`.
+- **Privé GHCR-package?** Gebruik `curl -fsSL ... | GHCR_USER=<naam> GHCR_TOKEN=<token> bash`.
+- **Updaten:** klik in de Docker-tab op **Check for Updates** en daarna **Apply Update** (of draai het script gewoon opnieuw).
+
+**Via een template (alternatief).** Kopieer [`unraid/vlogplanner.xml`](unraid/vlogplanner.xml) naar `/boot/config/plugins/dockerMan/templates-user/` (of zet de raw-URL bij *Template repositories* onder Docker-instellingen), kies in de Docker-tab **Add Container → vlogplanner**, vul minstens `JWT_SECRET_KEY` in (een lange willekeurige tekst) en klik op Apply. Het script hierboven doet dit allemaal voor je.
+
+**Alternatief met Docker Compose** (Unraid 6.12+ heeft `docker compose` ingebouwd), zonder Docker-tab-beheer:
 
 ```bash
 cd /mnt/user/appdata
@@ -76,17 +91,11 @@ docker compose pull
 docker compose up -d
 ```
 
-Open daarna `http://<jouw-unraid-ip>:7766`. Data (database, uploads, back-ups) blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map.
+Open daarna `http://<jouw-unraid-ip>:7766`. Data blijft bewaard in `./data`, `./uploads` en `./backups` binnen die map. Updaten: `cd /mnt/user/appdata/vlogplanner && git pull && docker compose pull && docker compose up -d`. Poort 7766 al in gebruik? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie"). Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan de **Compose Manager**-plugin.
 
-Updaten op Unraid gaat hetzelfde als hierboven: `cd /mnt/user/appdata/vlogplanner && git pull && docker compose pull && docker compose up -d`.
+**Liever plain `docker run` zonder Docker-tab-integratie?** `install-docker-run.sh` (eenmalig) en `update-docker-run.sh` blijven beschikbaar en raken je data nooit aan.
 
-Poort 7766 in gebruik door een andere container? Zet `FRONTEND_PORT=<andere-poort>` in `.env` (zie "Configuratie" hierboven) vóórdat je `docker compose up` draait.
-
-Werkt `docker compose` niet (Unraid ouder dan 6.12)? Installeer dan via Community Applications de **Compose Manager**-plugin, die geeft je ook een GUI om deze stack te beheren.
-
-**Liever plain `docker run` in plaats van `docker compose`?** Gebruik `install-docker-run.sh` (eenmalig, maakt `/mnt/user/appdata/vlogplanner/{data,uploads,backups}` aan met de juiste rechten en een `.env` met willekeurige JWT- en encryptiesleutels) en daarna `update-docker-run.sh` om te updaten — beide staan in de root van deze repo en raken je data nooit aan.
-
-**Zelf bouwen in plaats van de kant-en-klare image pullen?** Vervang in `docker-compose.yml` de `image:`-regel tijdelijk door `build: .` en draai `docker compose up --build -d`. Kom je dan de foutmelding `compose build requires buildx 0.17.0 or later` tegen (bekend op oudere Unraid-installaties met een verouderde `buildx`-plugin)? Zet dan `DOCKER_BUILDKIT=0` vóór het commando, of permanent in je `.env`-bestand.
+**Zelf bouwen in plaats van de kant-en-klare image pullen?** Vervang in `docker-compose.yml` de `image:`-regel tijdelijk door `build: .` en draai `docker compose up --build -d`. Kom je dan de foutmelding `compose build requires buildx 0.17.0 or later` tegen (bekend op oudere Unraid-installaties)? Zet dan `DOCKER_BUILDKIT=0` vóór het commando, of permanent in je `.env`-bestand.
 
 ## Ontwikkelmodus (zonder Docker)
 
