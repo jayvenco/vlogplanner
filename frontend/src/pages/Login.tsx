@@ -9,6 +9,8 @@ export default function Login() {
   const { t } = useLanguage();
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [needsPassword, setNeedsPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,10 +19,15 @@ export default function Login() {
     setError(null);
     setLoading(true);
     try {
-      await login(username);
+      await login(username, password);
       navigate("/");
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : t.auth.loginFailed);
+      if (err instanceof ApiError && err.message === "password_required") {
+        setNeedsPassword(true);
+        setError(t.auth.passwordRequired);
+      } else {
+        setError(err instanceof ApiError ? err.message : t.auth.loginFailed);
+      }
     } finally {
       setLoading(false);
     }
@@ -38,6 +45,16 @@ export default function Login() {
             onChange={(e) => setUsername(e.target.value)}
             required
           />
+          {needsPassword && (
+            <input
+              type="password"
+              placeholder={t.auth.password}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+              required
+            />
+          )}
           {error && <p className="error-text">{error}</p>}
           <button type="submit" disabled={loading}>
             {loading ? t.auth.loggingIn : t.auth.login}

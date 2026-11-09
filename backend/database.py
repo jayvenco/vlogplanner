@@ -58,6 +58,7 @@ SCHEMA_UPGRADE_STATEMENTS = [
     "ALTER TABLE users ADD COLUMN youtube_redirect_uri VARCHAR",
     "ALTER TABLE users ADD COLUMN youtube_api_key_encrypted VARCHAR",
     "ALTER TABLE users ADD COLUMN logo_path VARCHAR",
+    "ALTER TABLE users ADD COLUMN has_password BOOLEAN NOT NULL DEFAULT 0",
 ]
 
 

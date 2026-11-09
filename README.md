@@ -159,6 +159,20 @@ De **Trends & Aanbevelingen**-pagina gebruikt een heel andere, veel eenvoudigere
 
 Trend-data wordt maximaal elke 6 uur ververst (gecached in de database) om binnen de gratis API-quota te blijven — geen live call per paginabezoek.
 
+### Wachtwoord (optioneel)
+
+Een profiel heeft standaard **geen wachtwoord**: inloggen kan met alleen de naam. Wil je een profiel afschermen, ga dan naar **Instellingen → Account → Wachtwoord** om er een in te stellen, te wijzigen of weer te verwijderen (het huidige wachtwoord is daarvoor nodig). Heeft een profiel een wachtwoord, dan vraagt het inlogscherm er automatisch om.
+
+**Wachtwoord vergeten?** Een beheerder kan het resetten vanaf de server (op Unraid in de terminal):
+
+```bash
+# wachtwoord verwijderen, daarna kan het profiel weer met alleen de naam inloggen
+docker exec vlogplanner python reset_password.py <gebruikersnaam>
+
+# of direct een nieuw wachtwoord instellen (vraagt er interactief om)
+docker exec -it vlogplanner python reset_password.py <gebruikersnaam> --set
+```
+
 ## Functionaliteit
 
 - 🏠 **Dashboard** — overzicht van projecten, taken, ideeën, laatste project, motiverende quote en behaalde badges

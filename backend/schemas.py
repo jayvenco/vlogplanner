@@ -23,6 +23,7 @@ class UserCreate(BaseModel):
 
 class UserLogin(BaseModel):
     username: str
+    password: Optional[str] = None
 
 
 class UserOut(BaseModel):
@@ -40,6 +41,7 @@ class UserOut(BaseModel):
     has_youtube_oauth_config: bool = False
     has_youtube_api_key: bool = False
     logo_path: Optional[str] = None
+    has_password: bool = False
 
     @classmethod
     def from_user(cls, user) -> "UserOut":
@@ -60,6 +62,15 @@ class UserSettingsUpdate(BaseModel):
     youtube_client_secret: Optional[str] = None
     youtube_redirect_uri: Optional[str] = None
     youtube_api_key: Optional[str] = None
+
+
+class PasswordSetRequest(BaseModel):
+    current_password: Optional[str] = None
+    new_password: str
+
+
+class PasswordRemoveRequest(BaseModel):
+    current_password: str
 
 
 class LLMVerifyRequest(BaseModel):

@@ -15,6 +15,8 @@ export interface Translations {
     registerTitle: string;
     username: string;
     email: string;
+    password: string;
+    passwordRequired: string;
     login: string;
     loggingIn: string;
     createAccount: string;
@@ -243,6 +245,20 @@ export interface Translations {
     usernameSaved: string;
     usernameSaveError: string;
     email: string;
+    passwordTitle: string;
+    passwordHintNone: string;
+    passwordHintSet: string;
+    currentPasswordPlaceholder: string;
+    newPasswordPlaceholder: string;
+    confirmPasswordPlaceholder: string;
+    passwordSetButton: string;
+    passwordChangeButton: string;
+    passwordRemoveButton: string;
+    passwordMismatch: string;
+    passwordTooShort: string;
+    passwordSaved: string;
+    passwordRemoved: string;
+    passwordSaveError: string;
     logoTitle: string;
     logoHint: string;
     logoUpload: string;
@@ -330,6 +346,8 @@ export const nl: Translations = {
     registerTitle: "Welkom!",
     username: "Gebruikersnaam",
     email: "E-mailadres",
+    password: "Wachtwoord",
+    passwordRequired: "Dit profiel heeft een wachtwoord. Vul het hieronder in.",
     login: "Inloggen",
     loggingIn: "Bezig...",
     createAccount: "Account aanmaken",
@@ -583,6 +601,20 @@ export const nl: Translations = {
     usernameSaved: "Gebruikersnaam gewijzigd!",
     usernameSaveError: "Kon gebruikersnaam niet wijzigen.",
     email: "E-mail",
+    passwordTitle: "Wachtwoord",
+    passwordHintNone: "Je profiel heeft nu geen wachtwoord: iedereen met de naam kan inloggen. Stel er een in om het af te schermen.",
+    passwordHintSet: "Wachtwoord vergeten? Vraag degene die de server beheert om het te resetten.",
+    currentPasswordPlaceholder: "Huidig wachtwoord",
+    newPasswordPlaceholder: "Nieuw wachtwoord (minstens 6 tekens)",
+    confirmPasswordPlaceholder: "Bevestig nieuw wachtwoord",
+    passwordSetButton: "Wachtwoord instellen",
+    passwordChangeButton: "Wachtwoord wijzigen",
+    passwordRemoveButton: "Wachtwoord verwijderen",
+    passwordMismatch: "Wachtwoorden komen niet overeen",
+    passwordTooShort: "Wachtwoord moet minstens 6 tekens zijn",
+    passwordSaved: "Wachtwoord opgeslagen!",
+    passwordRemoved: "Wachtwoord verwijderd.",
+    passwordSaveError: "Kon wachtwoord niet opslaan.",
     logoTitle: "Logo",
     logoHint: "Upload je eigen logo — dit vervangt het standaardlogo linksboven in het menu.",
     logoUpload: "Logo kiezen",
@@ -670,6 +702,8 @@ export const en: Translations = {
     registerTitle: "Welcome!",
     username: "Username",
     email: "Email address",
+    password: "Password",
+    passwordRequired: "This profile has a password. Enter it below.",
     login: "Log in",
     loggingIn: "Working...",
     createAccount: "Create account",
@@ -923,6 +957,20 @@ export const en: Translations = {
     usernameSaved: "Username changed!",
     usernameSaveError: "Could not change username.",
     email: "Email",
+    passwordTitle: "Password",
+    passwordHintNone: "Your profile has no password right now: anyone with the name can log in. Set one to protect it.",
+    passwordHintSet: "Forgot your password? Ask whoever manages the server to reset it.",
+    currentPasswordPlaceholder: "Current password",
+    newPasswordPlaceholder: "New password (at least 6 characters)",
+    confirmPasswordPlaceholder: "Confirm new password",
+    passwordSetButton: "Set password",
+    passwordChangeButton: "Change password",
+    passwordRemoveButton: "Remove password",
+    passwordMismatch: "Passwords do not match",
+    passwordTooShort: "Password must be at least 6 characters",
+    passwordSaved: "Password saved!",
+    passwordRemoved: "Password removed.",
+    passwordSaveError: "Could not save password.",
     logoTitle: "Logo",
     logoHint: "Upload your own logo — this replaces the default logo in the top-left of the menu.",
     logoUpload: "Choose logo",

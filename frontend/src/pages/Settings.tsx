@@ -34,6 +34,12 @@ export default function Settings() {
   const [savingUsername, setSavingUsername] = useState(false);
   const [usernameMessage, setUsernameMessage] = useState<string | null>(null);
 
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordMessage, setPasswordMessage] = useState<string | null>(null);
+
   const [searchParams, setSearchParams] = useSearchParams();
   const [youtubeStatus, setYoutubeStatus] = useState<YoutubeStatus | null>(null);
   const [youtubeMessage, setYoutubeMessage] = useState<string | null>(null);
@@ -200,6 +206,48 @@ export default function Settings() {
     }
   }
 
+  async function handleSavePassword() {
+    setPasswordMessage(null);
+    if (newPassword.length < 6) {
+      setPasswordMessage(t.settings.passwordTooShort);
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordMessage(t.settings.passwordMismatch);
+      return;
+    }
+    setSavingPassword(true);
+    try {
+      await api.post<User>("/api/auth/password", { current_password: currentPassword || null, new_password: newPassword });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      await refreshUser();
+      setPasswordMessage(t.settings.passwordSaved);
+    } catch (err) {
+      setPasswordMessage(err instanceof ApiError ? err.message : t.settings.passwordSaveError);
+    } finally {
+      setSavingPassword(false);
+    }
+  }
+
+  async function handleRemovePassword() {
+    setPasswordMessage(null);
+    setSavingPassword(true);
+    try {
+      await api.post<User>("/api/auth/password/remove", { current_password: currentPassword });
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      await refreshUser();
+      setPasswordMessage(t.settings.passwordRemoved);
+    } catch (err) {
+      setPasswordMessage(err instanceof ApiError ? err.message : t.settings.passwordSaveError);
+    } finally {
+      setSavingPassword(false);
+    }
+  }
+
   async function handleSaveKey() {
     setSaving(true);
     setMessage(null);
@@ -290,6 +338,45 @@ export default function Settings() {
           </button>
         </div>
         {usernameMessage && <p>{usernameMessage}</p>}
+      </div>
+
+      <div className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>
+        <h2>{t.settings.passwordTitle}</h2>
+        <p className="template-hint">{user?.has_password ? t.settings.passwordHintSet : t.settings.passwordHintNone}</p>
+        {user?.has_password && (
+          <input
+            type="password"
+            placeholder={t.settings.currentPasswordPlaceholder}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+          />
+        )}
+        <input
+          type="password"
+          placeholder={t.settings.newPasswordPlaceholder}
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder={t.settings.confirmPasswordPlaceholder}
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          <button
+            onClick={handleSavePassword}
+            disabled={savingPassword || !newPassword || !confirmPassword || (user?.has_password && !currentPassword)}
+          >
+            {user?.has_password ? t.settings.passwordChangeButton : t.settings.passwordSetButton}
+          </button>
+          {user?.has_password && (
+            <button className="ghost" onClick={handleRemovePassword} disabled={savingPassword || !currentPassword}>
+              {t.settings.passwordRemoveButton}
+            </button>
+          )}
+        </div>
+        {passwordMessage && <p>{passwordMessage}</p>}
       </div>
 
       <div className="card card-spaced" style={{ display: "grid", gap: "0.75rem" }}>

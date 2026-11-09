@@ -80,6 +80,7 @@ class User(Base):
     username = Column(String, unique=True, index=True, nullable=False)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    has_password = Column(Boolean, nullable=False, default=False, server_default="0")
     llm_provider = Column(Enum(LLMProvider), nullable=True)
     llm_api_key_encrypted = Column(String, nullable=True)
     llm_model = Column(String, nullable=True)

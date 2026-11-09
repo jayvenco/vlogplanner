@@ -21,6 +21,7 @@ export interface User {
   has_youtube_oauth_config: boolean;
   has_youtube_api_key: boolean;
   logo_path: string | null;
+  has_password: boolean;
 }
 
 export interface ChecklistItem {

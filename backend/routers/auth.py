@@ -13,10 +13,12 @@ from schemas import (
     Token,
     UserOut,
     UserSettingsUpdate,
+    PasswordSetRequest,
+    PasswordRemoveRequest,
     LLMVerifyRequest,
     LLMVerifyResult,
 )
-from auth import hash_password, create_access_token, get_current_user
+from auth import hash_password, verify_password, create_access_token, get_current_user
 from crypto_utils import encrypt
 from llm_service import verify_key
 
@@ -35,8 +37,8 @@ def register(payload: UserCreate, db: Session = Depends(get_db)):
     user = User(
         username=payload.username,
         email=payload.email,
-        # No password collected for now: store an internal random hash so the
-        # column stays populated, but it is never issued to or checked against the user.
+        # Passwords are opt-in (set later in Instellingen): until then store an internal
+        # random hash so the NOT NULL column is filled; has_password=False means it is never checked.
         hashed_password=hash_password(secrets.token_urlsafe(32)),
     )
     db.add(user)
@@ -55,6 +57,12 @@ def login(payload: UserLogin, db: Session = Depends(get_db)):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Gebruikersnaam bestaat niet",
         )
+    if user.has_password:
+        # The frontend keys off this exact detail to reveal the password field.
+        if not payload.password:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="password_required")
+        if not verify_password(payload.password, user.hashed_password):
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Wachtwoord is onjuist")
 
     token = create_access_token(user.id)
     return Token(access_token=token, user=UserOut.from_user(user))
@@ -95,6 +103,38 @@ def update_me(
         current_user.youtube_redirect_uri = data["youtube_redirect_uri"] or None
     if "youtube_api_key" in data:
         current_user.youtube_api_key_encrypted = encrypt(data["youtube_api_key"]) if data["youtube_api_key"] else None
+    db.commit()
+    db.refresh(current_user)
+    return UserOut.from_user(current_user)
+
+
+@router.post("/password", response_model=UserOut)
+def set_password(
+    payload: PasswordSetRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    if current_user.has_password and not (
+        payload.current_password and verify_password(payload.current_password, current_user.hashed_password)
+    ):
+        raise HTTPException(status_code=400, detail="Huidig wachtwoord is onjuist")
+    if len(payload.new_password) < 6:
+        raise HTTPException(status_code=400, detail="Wachtwoord moet minstens 6 tekens zijn")
+    current_user.hashed_password = hash_password(payload.new_password)
+    current_user.has_password = True
+    db.commit()
+    db.refresh(current_user)
+    return UserOut.from_user(current_user)
+
+
+@router.post("/password/remove", response_model=UserOut)
+def remove_password(
+    payload: PasswordRemoveRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    if not current_user.has_password:
+        return UserOut.from_user(current_user)
+    if not verify_password(payload.current_password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Huidig wachtwoord is onjuist")
+    current_user.hashed_password = hash_password(secrets.token_urlsafe(32))
+    current_user.has_password = False
     db.commit()
     db.refresh(current_user)
     return UserOut.from_user(current_user)
