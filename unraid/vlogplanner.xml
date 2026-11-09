@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>vlogplanner</Name>
+  <Repository>ghcr.io/jayvenco/vlogplanner:latest</Repository>
+  <Registry>https://github.com/jayvenco/vlogplanner/pkgs/container/vlogplanner</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/jayvenco/vlogplanner/issues</Support>
+  <Project>https://github.com/jayvenco/vlogplanner</Project>
+  <Overview>VlogPlanner is een vrolijke webapp die jonge content creators stap voor stap helpt bij het bedenken, voorbereiden, opnemen en publiceren van YouTube-video's. Met projecten, checklists, storyboards, een ideeën-bord, taken en een dagboek. Alles draait in één container; je gegevens blijven bewaard in je appdata-map.</Overview>
+  <Category>Productivity: Tools:</Category>
+  <WebUI>http://[IP]:[PORT:8000]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/jayvenco/vlogplanner/main/unraid/vlogplanner.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/jayvenco/vlogplanner/main/unraid/icon.png</Icon>
+  <ExtraParams>--restart=unless-stopped</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <Config Name="WebUI-poort" Target="8000" Default="7766" Mode="tcp" Description="Poort waarop de app bereikbaar is (host-poort; in de container is het altijd 8000)." Type="Port" Display="always" Required="true" Mask="false">7766</Config>
+  <Config Name="Database" Target="/app/data" Default="/mnt/user/appdata/vlogplanner/data" Mode="rw" Description="Map voor de SQLite-database." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/vlogplanner/data</Config>
+  <Config Name="Uploads" Target="/app/uploads" Default="/mnt/user/appdata/vlogplanner/uploads" Mode="rw" Description="Map voor geüploade thumbnails, inspiratie-afbeeldingen en logo's." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/vlogplanner/uploads</Config>
+  <Config Name="Back-ups" Target="/app/backups" Default="/mnt/user/appdata/vlogplanner/backups" Mode="rw" Description="Map voor de automatische maandelijkse back-ups." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/vlogplanner/backups</Config>
+  <Config Name="JWT_SECRET_KEY" Target="JWT_SECRET_KEY" Default="" Mode="" Description="Geheime sleutel voor het ondertekenen van inlogtokens. Lange willekeurige tekst; het installatiescript genereert deze voor je." Type="Variable" Display="always" Required="true" Mask="true"></Config>
+  <Config Name="ENCRYPTION_KEY" Target="ENCRYPTION_KEY" Default="" Mode="" Description="Aparte sleutel voor het versleutelen van opgeslagen API-sleutels. Laat leeg om (zoals voorheen) JWT_SECRET_KEY te gebruiken. Eenmaal gezet nooit meer wijzigen." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="ACCESS_TOKEN_EXPIRE_MINUTES" Target="ACCESS_TOKEN_EXPIRE_MINUTES" Default="10080" Mode="" Description="Hoe lang een login geldig blijft, in minuten (10080 = 7 dagen)." Type="Variable" Display="advanced" Required="false" Mask="false">10080</Config>
+  <Config Name="YOUTUBE_CLIENT_ID" Target="YOUTUBE_CLIENT_ID" Default="" Mode="" Description="Optioneel: Google OAuth client-ID voor de YouTube-koppeling (ook per account in te stellen via Instellingen)." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="YOUTUBE_CLIENT_SECRET" Target="YOUTUBE_CLIENT_SECRET" Default="" Mode="" Description="Optioneel: Google OAuth client-secret voor de YouTube-koppeling." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+  <Config Name="YOUTUBE_REDIRECT_URI" Target="YOUTUBE_REDIRECT_URI" Default="" Mode="" Description="Optioneel: redirect-URI, bv. http://[unraid-ip]:7766/api/youtube/callback. Moet exact overeenkomen met Google Cloud Console." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="YOUTUBE_API_KEY" Target="YOUTUBE_API_KEY" Default="" Mode="" Description="Optioneel: YouTube Data API-sleutel voor de Trends-pagina." Type="Variable" Display="advanced" Required="false" Mask="true"></Config>
+</Container>
