@@ -8,15 +8,17 @@ Een vrolijke, eenvoudige webapp die jonge content creators stap voor stap helpt 
 
 ## Screenshots
 
-> _Voeg hier screenshots toe zodra de app draait._
-
 | Dashboard | Mijn Projecten | Checklist |
 | --- | --- | --- |
-| `screenshots/dashboard.png` | `screenshots/projecten.png` | `screenshots/checklist.png` |
+| ![Dashboard](screenshots/dashboard.png) | ![Mijn Projecten](screenshots/projecten.png) | ![Checklist](screenshots/checklist.png) |
 
 | Ideeën (Kanban) | Storyboard | Video Planner |
 | --- | --- | --- |
-| `screenshots/ideeen.png` | `screenshots/storyboard.png` | `screenshots/video-planner.png` |
+| ![Ideeën](screenshots/ideeen.png) | ![Storyboard](screenshots/storyboard.png) | ![Video Planner](screenshots/video-planner.png) |
+
+| Taken | Dagboek |
+| --- | --- |
+| ![Taken](screenshots/taken.png) | ![Dagboek](screenshots/dagboek.png) |
 
 ## Installatie (Docker)
 
